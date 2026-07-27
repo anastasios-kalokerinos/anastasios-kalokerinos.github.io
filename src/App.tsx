@@ -285,9 +285,11 @@ function OperationsTerminal({
 }) {
   const [input, setInput] = useState('')
   const [lines, setLines] = useState<TerminalLine[]>([
-    { type: 'system', text: 'AK Operations Terminal v1.1' },
+    { type: 'system', text: 'AK Operations Terminal v2.0' },
+    { type: 'system', text: 'Secure portfolio session established.' },
     { type: 'system', text: 'Type "help" to list available commands.' },
   ])
+  const [isTyping, setIsTyping] = useState(false)
   const terminalBodyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -295,37 +297,58 @@ function OperationsTerminal({
       top: terminalBodyRef.current.scrollHeight,
       behavior: 'smooth',
     })
-  }, [lines])
+  }, [lines, isTyping])
 
-  const addOutput = (text: string, type: TerminalLine['type'] = 'output') => {
-    setLines((current) => [...current, { type, text }])
+  const appendLine = (line: TerminalLine) => {
+    setLines((current) => [...current, line])
+  }
+
+  const typeOutput = (text: string, type: TerminalLine['type'] = 'output') => {
+    setIsTyping(true)
+    const parts = text.split('\n')
+    let index = 0
+
+    const writeNext = () => {
+      if (index >= parts.length) {
+        setIsTyping(false)
+        return
+      }
+
+      appendLine({ type, text: parts[index] })
+      index += 1
+      window.setTimeout(writeNext, 90)
+    }
+
+    writeNext()
   }
 
   const runCommand = (rawCommand: string) => {
+    if (isTyping) return
+
     const command = rawCommand.trim().toLowerCase()
     if (!command) return
 
-    setLines((current) => [...current, { type: 'input', text: command }])
+    appendLine({ type: 'input', text: command })
     setInput('')
 
     if (command === 'help') {
-      addOutput(
+      typeOutput(
         [
           'AVAILABLE COMMANDS',
           '',
           'about       show professional profile',
           'experience  show recent career experience',
-          'stack       show technical solutions stack',
-          'cases       list operational case files',
+          'skills      show technical and operational capabilities',
+          'incidents   list notable operational incidents',
           'case 001    open the 240-day vessel recovery',
           'case 002    open the one-year vessel recovery',
           'case 003    open the six-month escalation',
           'case 004    open the stolen vehicle investigation',
           'case 005    open the documentation case',
-          'whoami      show current positioning',
-          'status      show privacy and portfolio status',
+          'contact     show secure contact details',
           'linkedin    open LinkedIn in a new tab',
-          'contact     show contact instructions',
+          'whoami      show current professional identity',
+          'status      show current portfolio status',
           'clear       clear terminal output',
         ].join('\n'),
       )
@@ -333,74 +356,96 @@ function OperationsTerminal({
     }
 
     if (command === 'about') {
-      addOutput(
+      typeOutput(
         [
-          'ABOUT',
+          'PROFILE LOADED',
           '',
-          'Senior Technical Solutions & Operations Specialist based in Greece.',
-          'Focused on customer-facing technical solutions, production incident ownership,',
-          'service restoration, operational delivery and cross-functional coordination.',
+          'Name: Anastasios Kalokerinos',
+          'Role: Senior Technical Solutions & Operations Specialist',
+          'Location: Greece',
+          'Experience: 15+ years',
+          'Languages: Greek / English / German',
           '',
-          'Current domains: Maritime AI, enterprise SaaS, IoT, telematics and fleet technology.',
-          'Working languages: Greek, English and German.',
+          'Focus:',
+          '- Customer-facing technical solutions',
+          '- Production incident ownership',
+          '- Service restoration and operational delivery',
+          '- Cross-functional technical coordination',
+          '- Maritime AI, enterprise SaaS, IoT and telematics',
         ].join('\n'),
       )
       return
     }
 
     if (command === 'experience') {
-      addOutput(
+      typeOutput(
         [
           'RECENT EXPERIENCE',
           '',
-          '[2026 - PRESENT] Maritime AI Technology Company',
+          '[2026 - PRESENT]',
+          'Maritime AI Technology Company',
           'Customer Support Specialist / Technical Solutions & Operations Scope',
-          '- Portfolio responsibility across 150+ vessels',
-          '- Linux, SSH, PostgreSQL, SQL, Grafana, GitLab, AWS and Docker',
-          '- Customer-facing incident ownership, implementations and field visits',
-          '- Restored vessels after outages lasting 240+ days and over one year',
+          '- Mission-critical support across 150+ vessels',
+          '- Linux, SSH, PostgreSQL, Grafana, GitLab, AWS and Docker',
+          '- Field visits, implementations and production recovery',
+          '- Restored outages lasting 240+ days and more than one year',
           '',
-          '[2021 - 2026] PowerFleet / Fleet Complete',
+          '[2021 - 2026]',
+          'PowerFleet / Fleet Complete',
           'Technical Support Engineer L2 / Data Analyst - EMEA',
-          '- L2/L3 telematics support across Greece, DACH, Benelux and Baltics',
+          '- Telematics support across Greece, DACH, Benelux and Baltics',
           '- CANBus, GNSS, firmware, hardware and historical telemetry analysis',
-          '- Internal documentation, technical playbooks and investigation tools',
-          '- Helped locate two stolen vehicles without live GPS transmissions',
+          '- Internal documentation, playbooks and investigation tools',
+          '- Helped locate two stolen vehicles without live GPS',
           '',
           '[EARLIER CAREER]',
-          '- IT support, Microsoft technologies, project delivery, customer operations',
-          '- E-commerce, digital operations and international business environments',
+          '- IT support, Microsoft technologies and project delivery',
+          '- Customer operations, e-commerce and international environments',
         ].join('\n'),
       )
       return
     }
 
-    if (command === 'stack') {
-      addOutput(
+    if (command === 'skills' || command === 'stack') {
+      typeOutput(
         [
-          'TECHNICAL SOLUTIONS STACK',
+          'CAPABILITIES',
           '',
-          'Operations      Incident ownership / service restoration / on-call',
-          'Systems         Linux / SSH / Docker',
-          'Data            PostgreSQL / SQL / telemetry analysis',
-          'Monitoring      Grafana / logs / production diagnostics',
-          'Delivery        GitLab / implementations / documentation',
-          'Cloud           AWS',
-          'Networking      TCP/IP / VSAT / router bypass / connectivity',
-          'Domains         Maritime AI / IoT / telematics / enterprise SaaS',
+          'Technical Operations',
+          '- Incident ownership',
+          '- Service restoration',
+          '- On-call operations',
+          '- Field intervention',
+          '',
+          'Systems & Data',
+          '- Linux / SSH',
+          '- PostgreSQL / SQL',
+          '- Grafana / logs / diagnostics',
+          '- Docker / AWS / GitLab',
+          '',
+          'Connectivity & Platforms',
+          '- TCP/IP / VSAT / routing',
+          '- IoT / telematics / maritime systems',
+          '- Enterprise SaaS',
+          '',
+          'Customer Solutions',
+          '- Stakeholder communication',
+          '- Root cause analysis',
+          '- Cross-team coordination',
+          '- Operational documentation',
         ].join('\n'),
       )
       return
     }
 
-    if (command === 'cases') {
-      addOutput(
+    if (command === 'incidents' || command === 'cases') {
+      typeOutput(
         [
-          'OPERATIONAL CASE FILES',
+          'NOTABLE OPERATIONAL INCIDENTS',
           '',
           '001  Critical vessel communications restored after 240+ days',
-          '002  Long-term vessel failure recovered after 1+ year',
-          '003  Six-month technical escalation resolved within one week',
+          '002  Long-term vessel failure recovered after more than one year',
+          '003  Six-month escalation resolved within one week',
           '004  Two stolen vehicles located without live GPS',
           '005  Complex field procedures standardised in Confluence',
           '',
@@ -421,16 +466,39 @@ function OperationsTerminal({
       }[code]
 
       if (match) {
-        addOutput(`Opening secure case file ${match}...`)
+        appendLine({ type: 'system', text: `Opening secure case file ${match}...` })
         onOpenCase(match)
       } else {
-        addOutput('Unknown case. Valid values: 001, 002, 003, 004, 005', 'system')
+        typeOutput('Unknown case. Valid values: 001, 002, 003, 004, 005', 'system')
       }
       return
     }
 
+    if (command === 'contact') {
+      typeOutput(
+        [
+          'SECURE CONTACT',
+          '',
+          'Preferred channel: LinkedIn',
+          'Response time: Usually within 24 hours',
+          '',
+          'No personal phone number, home address or direct email',
+          'is published on this portfolio.',
+          '',
+          'Run: linkedin',
+        ].join('\n'),
+      )
+      return
+    }
+
+    if (command === 'linkedin') {
+      appendLine({ type: 'system', text: 'Opening LinkedIn in a new tab...' })
+      window.open('https://www.linkedin.com/in/anastasios-kalokerinos/', '_blank', 'noopener,noreferrer')
+      return
+    }
+
     if (command === 'whoami') {
-      addOutput(
+      typeOutput(
         [
           'ANASTASIOS KALOKERINOS',
           'Senior Technical Solutions & Operations Specialist',
@@ -443,31 +511,14 @@ function OperationsTerminal({
     }
 
     if (command === 'status') {
-      addOutput(
+      typeOutput(
         [
           'PORTFOLIO STATUS: ONLINE',
           'CONTACT MODE: LINKEDIN ONLY',
           'PUBLIC PERSONAL DATA: MINIMISED',
           'CUSTOMER DATA: REDACTED',
-          'SOURCE REPOSITORY: NOT LINKED FROM PORTFOLIO',
-        ].join('\n'),
-      )
-      return
-    }
-
-    if (command === 'linkedin') {
-      addOutput('Opening LinkedIn in a new tab...')
-      window.open('https://www.linkedin.com/in/anastasios-kalokerinos/', '_blank', 'noopener,noreferrer')
-      return
-    }
-
-    if (command === 'contact') {
-      addOutput(
-        [
-          'SECURE CONTACT',
-          '',
-          'Use the LinkedIn button in the Contact section or run: linkedin',
-          'No personal phone number, home address or direct email is published.',
+          'INCIDENT SUMMARIES: ANONYMISED',
+          'SYSTEMS OPERATIONAL',
         ].join('\n'),
       )
       return
@@ -478,7 +529,7 @@ function OperationsTerminal({
       return
     }
 
-    addOutput(`Command not found: ${command}. Type "help".`, 'system')
+    typeOutput(`Command not found: ${command}. Type "help".`, 'system')
   }
 
   return (
@@ -488,7 +539,7 @@ function OperationsTerminal({
           <div className="section-label">05 / OPERATIONS TERMINAL</div>
           <h2>Explore the portfolio by command.</h2>
         </div>
-        <p>Commands return information inside the console. Case commands open protected summaries.</p>
+        <p>Commands return information inside the console. Case commands open anonymised reports.</p>
       </div>
 
       <div className="interactive-terminal">
@@ -508,6 +559,7 @@ function OperationsTerminal({
               {line.type === 'input' ? `ak@operations:~$ ${line.text}` : line.text}
             </pre>
           ))}
+          {isTyping && <div className="terminal-typing">processing<span className="terminal-cursor">_</span></div>}
         </div>
 
         <form
@@ -525,8 +577,9 @@ function OperationsTerminal({
             autoComplete="off"
             spellCheck={false}
             placeholder='type "help"'
+            disabled={isTyping}
           />
-          <button type="submit">RUN</button>
+          <button type="submit" disabled={isTyping}>RUN</button>
         </form>
       </div>
     </section>

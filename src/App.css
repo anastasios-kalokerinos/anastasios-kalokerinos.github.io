@@ -835,3 +835,30 @@ footer { min-height: 74px; border-top: 1px solid var(--line); padding: 0 max(24p
   .target-three { top: 118px; left: 16px; }
   .target-four { right: 18px; bottom: 122px; }
 }
+
+/* Terminal V2 enhancements */
+.terminal-typing {
+  margin-top: 6px;
+  color: var(--green);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.terminal-cursor {
+  display: inline-block;
+  margin-left: 2px;
+  color: var(--green);
+  animation: terminalBlink 0.8s steps(1) infinite;
+}
+
+.terminal-input-row input:disabled,
+.terminal-input-row button:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+@keyframes terminalBlink {
+  0%, 48% { opacity: 1; }
+  49%, 100% { opacity: 0; }
+}
