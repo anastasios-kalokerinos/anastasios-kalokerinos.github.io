@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   Activity,
   ArrowDown,
@@ -273,6 +273,197 @@ function CaseIcon({ type }: { type: CaseStudy['icon'] }) {
   return <Wrench size={24} />
 }
 
+type TerminalLine = {
+  type: 'input' | 'output' | 'system'
+  text: string
+}
+
+function OperationsTerminal({
+  onOpenCase,
+}: {
+  onOpenCase: (caseId: string) => void
+}) {
+  const [input, setInput] = useState('')
+  const [lines, setLines] = useState<TerminalLine[]>([
+    { type: 'system', text: 'AK Operations Terminal v1.0' },
+    { type: 'system', text: 'Type "help" to list available commands.' },
+  ])
+  const terminalBodyRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    terminalBodyRef.current?.scrollTo({
+      top: terminalBodyRef.current.scrollHeight,
+      behavior: 'smooth',
+    })
+  }, [lines])
+
+  const addOutput = (text: string, type: TerminalLine['type'] = 'output') => {
+    setLines((current) => [...current, { type, text }])
+  }
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const runCommand = (rawCommand: string) => {
+    const command = rawCommand.trim().toLowerCase()
+
+    if (!command) return
+
+    setLines((current) => [...current, { type: 'input', text: command }])
+    setInput('')
+
+    if (command === 'help') {
+      addOutput(
+        [
+          'AVAILABLE COMMANDS',
+          'about       - open operator profile',
+          'experience  - open career timeline',
+          'stack       - open technical stack',
+          'cases       - open operational case studies',
+          'case 001    - open the 240-day vessel recovery',
+          'case 002    - open the one-year vessel recovery',
+          'case 003    - open the six-month escalation',
+          'case 004    - open the stolen vehicle investigation',
+          'case 005    - open the documentation case',
+          'linkedin    - open LinkedIn in a new tab',
+          'contact     - open secure contact section',
+          'whoami      - show current professional profile',
+          'status      - show portfolio status',
+          'clear       - clear terminal output',
+        ].join('\n'),
+      )
+      return
+    }
+
+    if (command === 'about') {
+      addOutput('Opening operator profile...')
+      scrollToSection('about')
+      return
+    }
+
+    if (command === 'experience') {
+      addOutput('Opening career timeline...')
+      scrollToSection('experience')
+      return
+    }
+
+    if (command === 'stack') {
+      addOutput('Opening technical stack...')
+      scrollToSection('stack')
+      return
+    }
+
+    if (command === 'cases') {
+      addOutput('Opening operational case studies...')
+      scrollToSection('incidents')
+      return
+    }
+
+    if (command.startsWith('case ')) {
+      const code = command.replace('case ', '').trim().padStart(3, '0')
+      const match = {
+        '001': 'CASE-2026-001',
+        '002': 'CASE-2026-002',
+        '003': 'CASE-2026-003',
+        '004': 'CASE-2025-004',
+        '005': 'CASE-2026-005',
+      }[code]
+
+      if (match) {
+        addOutput(`Opening ${match}...`)
+        onOpenCase(match)
+      } else {
+        addOutput('Unknown case. Valid values: 001, 002, 003, 004, 005', 'system')
+      }
+      return
+    }
+
+    if (command === 'linkedin') {
+      addOutput('Opening LinkedIn...')
+      window.open('https://www.linkedin.com/in/anastasios-kalokerinos/', '_blank', 'noopener,noreferrer')
+      return
+    }
+
+    if (command === 'contact') {
+      addOutput('Opening secure contact section...')
+      scrollToSection('contact')
+      return
+    }
+
+    if (command === 'whoami') {
+      addOutput(
+        'Anastasios Kalokerinos\nSenior Technical Solutions & Operations Specialist\nEnterprise SaaS / Maritime AI / IoT / Linux / PostgreSQL / Customer Solutions',
+      )
+      return
+    }
+
+    if (command === 'status') {
+      addOutput(
+        'PORTFOLIO STATUS: ONLINE\nCONTACT MODE: LINKEDIN ONLY\nPUBLIC PERSONAL DATA: MINIMISED\nCUSTOMER DATA: REDACTED',
+      )
+      return
+    }
+
+    if (command === 'clear') {
+      setLines([])
+      return
+    }
+
+    addOutput(`Command not found: ${command}. Type "help".`, 'system')
+  }
+
+  return (
+    <section className="content-section terminal-section" id="terminal">
+      <div className="section-heading">
+        <div>
+          <div className="section-label">05 / OPERATIONS TERMINAL</div>
+          <h2>Explore the portfolio by command.</h2>
+        </div>
+        <p>Use the terminal to navigate, inspect case files and open professional links.</p>
+      </div>
+
+      <div className="interactive-terminal">
+        <div className="terminal-window-bar">
+          <div>
+            <span />
+            <span />
+            <span />
+          </div>
+          <strong>AK-OPS / SECURE SESSION</strong>
+          <small>CONNECTED</small>
+        </div>
+
+        <div className="terminal-output" ref={terminalBodyRef}>
+          {lines.map((line, index) => (
+            <pre className={`terminal-line terminal-${line.type}`} key={`${line.text}-${index}`}>
+              {line.type === 'input' ? `ak@operations:~$ ${line.text}` : line.text}
+            </pre>
+          ))}
+        </div>
+
+        <form
+          className="terminal-input-row"
+          onSubmit={(event) => {
+            event.preventDefault()
+            runCommand(input)
+          }}
+        >
+          <label htmlFor="terminal-command">ak@operations:~$</label>
+          <input
+            id="terminal-command"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            autoComplete="off"
+            spellCheck={false}
+            placeholder='type "help"'
+          />
+          <button type="submit">RUN</button>
+        </form>
+      </div>
+    </section>
+  )
+}
 function App() {
   const [booted, setBooted] = useState(false)
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null)
@@ -303,7 +494,7 @@ function App() {
           <a href="#incidents" onClick={() => setMenuOpen(false)}>Case Studies</a>
           <a href="#stack" onClick={() => setMenuOpen(false)}>Stack</a>
           <a href="#experience" onClick={() => setMenuOpen(false)}>Experience</a>
-          <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+          <a href="#terminal" onClick={() => setMenuOpen(false)}>Terminal</a>`r`n          <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
 
         <div className="system-status">
@@ -496,10 +687,17 @@ function App() {
             <Award size={38} className="knowledge-award" />
           </div>
         </section>
+        <OperationsTerminal
+          onOpenCase={(caseId) => {
+            const match = caseStudies.find((item) => item.id === caseId)
+            if (match) setSelectedCase(match)
+          }}
+        />
+
 
         <section className="contact-section" id="contact">
           <div>
-            <div className="section-label">05 / SECURE CONTACT</div>
+            <div className="section-label">06 / SECURE CONTACT</div>
             <h2>Have a complex technical challenge?</h2>
             <p>
               Connect through LinkedIn. No personal phone number, home address or direct email is published
