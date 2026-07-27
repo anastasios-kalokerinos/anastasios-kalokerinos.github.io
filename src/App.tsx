@@ -413,14 +413,6 @@ function App() {
             >
               <ExternalLink size={18} /> Open LinkedIn
             </a>
-            <a
-              className="secondary-action"
-              href="https://github.com/anastasios-kalokerinos"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <Code2 size={18} /> GitHub
-            </a>
           </div>
         </section>
       </main>
@@ -460,4 +452,5 @@ function App() {
 }
 
 export default App
+
 
