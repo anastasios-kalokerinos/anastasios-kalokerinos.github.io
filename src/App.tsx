@@ -285,11 +285,9 @@ function OperationsTerminal({
 }) {
   const [input, setInput] = useState('')
   const [lines, setLines] = useState<TerminalLine[]>([
-    { type: 'system', text: 'AK Operations Terminal v2.0' },
-    { type: 'system', text: 'Secure portfolio session established.' },
-    { type: 'system', text: 'Type "help" to list available commands.' },
+    { type: 'system', text: 'AK Operations Terminal v3.0' },
+    { type: 'system', text: 'Type "help" for the complete command list.' },
   ])
-  const [isTyping, setIsTyping] = useState(false)
   const terminalBodyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -297,158 +295,154 @@ function OperationsTerminal({
       top: terminalBodyRef.current.scrollHeight,
       behavior: 'smooth',
     })
-  }, [lines, isTyping])
+  }, [lines])
 
-  const appendLine = (line: TerminalLine) => {
-    setLines((current) => [...current, line])
-  }
-
-  const typeOutput = (text: string, type: TerminalLine['type'] = 'output') => {
-    setIsTyping(true)
-    const parts = text.split('\n')
-    let index = 0
-
-    const writeNext = () => {
-      if (index >= parts.length) {
-        setIsTyping(false)
-        return
-      }
-
-      appendLine({ type, text: parts[index] })
-      index += 1
-      window.setTimeout(writeNext, 90)
-    }
-
-    writeNext()
+  const appendOutput = (text: string, type: TerminalLine['type'] = 'output') => {
+    setLines((current) => [...current, { type, text }])
   }
 
   const runCommand = (rawCommand: string) => {
-    if (isTyping) return
-
     const command = rawCommand.trim().toLowerCase()
     if (!command) return
 
-    appendLine({ type: 'input', text: command })
+    setLines((current) => [...current, { type: 'input', text: command }])
     setInput('')
 
     if (command === 'help') {
-      typeOutput(
+      appendOutput(
         [
           'AVAILABLE COMMANDS',
-          '',
-          'about       show professional profile',
-          'experience  show recent career experience',
-          'skills      show technical and operational capabilities',
-          'incidents   list notable operational incidents',
-          'case 001    open the 240-day vessel recovery',
-          'case 002    open the one-year vessel recovery',
-          'case 003    open the six-month escalation',
-          'case 004    open the stolen vehicle investigation',
-          'case 005    open the documentation case',
-          'contact     show secure contact details',
-          'linkedin    open LinkedIn in a new tab',
-          'whoami      show current professional identity',
-          'status      show current portfolio status',
-          'clear       clear terminal output',
+          'about       executive profile',
+          'career      complete career history',
+          'technical   technical toolkit',
+          'expertise   core expertise',
+          'impact      selected achievements',
+          'languages   language proficiency',
+          'education   education and professional development',
+          'incidents   operational case files',
+          'case 001    open case file 001',
+          'case 002    open case file 002',
+          'case 003    open case file 003',
+          'case 004    open case file 004',
+          'case 005    open case file 005',
+          'contact     secure contact information',
+          'linkedin    open LinkedIn',
+          'status      portfolio status',
+          'clear       clear terminal',
         ].join('\n'),
       )
       return
     }
 
     if (command === 'about') {
-      typeOutput(
+      appendOutput(
         [
-          'PROFILE LOADED',
-          '',
-          'Name: Anastasios Kalokerinos',
-          'Role: Senior Technical Solutions & Operations Specialist',
-          'Location: Greece',
-          'Experience: 15+ years',
-          'Languages: Greek / English / German',
-          '',
-          'Focus:',
-          '- Customer-facing technical solutions',
-          '- Production incident ownership',
-          '- Service restoration and operational delivery',
-          '- Cross-functional technical coordination',
-          '- Maritime AI, enterprise SaaS, IoT and telematics',
+          'EXECUTIVE PROFILE',
+          'Senior Technical Solutions & Operations Engineer with 15+ years across technical, customer-facing, and operational roles, including 5+ years in enterprise SaaS, IoT, telematics, and maritime AI.',
+          'Trusted with mission-critical incidents, complex implementations, L3 escalations, and customer-facing field interventions.',
+          'Hands-on with Linux servers, PostgreSQL, Grafana, GitLab, AWS, Docker, SSH, SQL, APIs, and network diagnostics.',
+          'Known for restoring long-failing production environments, translating complex technical findings into clear actions, and collaborating effectively with Engineering, Product, Customer Success, vessel crews, and enterprise IT teams.',
         ].join('\n'),
       )
       return
     }
 
-    if (command === 'experience') {
-      typeOutput(
+    if (command === 'career' || command === 'experience') {
+      appendOutput(
         [
-          'RECENT EXPERIENCE',
-          '',
-          '[2026 - PRESENT]',
-          'Maritime AI Technology Company',
-          'Customer Support Specialist / Technical Solutions & Operations Scope',
-          '- Mission-critical support across 150+ vessels',
-          '- Linux, SSH, PostgreSQL, Grafana, GitLab, AWS and Docker',
-          '- Field visits, implementations and production recovery',
-          '- Restored outages lasting 240+ days and more than one year',
-          '',
-          '[2021 - 2026]',
-          'PowerFleet / Fleet Complete',
-          'Technical Support Engineer L2 / Data Analyst - EMEA',
-          '- Telematics support across Greece, DACH, Benelux and Baltics',
-          '- CANBus, GNSS, firmware, hardware and historical telemetry analysis',
-          '- Internal documentation, playbooks and investigation tools',
-          '- Helped locate two stolen vehicles without live GPS',
-          '',
-          '[EARLIER CAREER]',
-          '- IT support, Microsoft technologies and project delivery',
-          '- Customer operations, e-commerce and international environments',
+          'CAREER HISTORY',
+          'Orca AI | Customer Support Specialist (Technical Solutions & Operations) | Mar 23, 2026 - Present',
+          'PowerFleet / Fleet Complete | Technical Support Engineer L2 / Data Analyst (EMEA) | Apr 19, 2021 - Mar 23, 2026',
+          'IBI Parts | Project Manager | Sep 2019 - Mar 2021',
+          'Webhelp | Amazon Customer Support Representative | Sep 2018 - Sep 2019',
+          'Teleperformance | Microsoft Technical Support Agent | Sep 2016 - Sep 2018',
+          'Stelpet | E-Shop & Digital Marketing Manager | Nov 2014 - Mar 2016',
+          'Istos Business Interface Ltd. | IT & Networks Manager | Mar 2010 - Oct 2013',
+          'Hellenic Army | Communications Center Specialist | May 2009 - Feb 2010',
+          'Technical & Customer-Facing Roles | Greece & Germany | 2001 - 2009',
         ].join('\n'),
       )
       return
     }
 
-    if (command === 'skills' || command === 'stack') {
-      typeOutput(
+    if (command === 'technical' || command === 'skills' || command === 'stack') {
+      appendOutput(
         [
-          'CAPABILITIES',
-          '',
-          'Technical Operations',
-          '- Incident ownership',
-          '- Service restoration',
-          '- On-call operations',
-          '- Field intervention',
-          '',
-          'Systems & Data',
-          '- Linux / SSH',
-          '- PostgreSQL / SQL',
-          '- Grafana / logs / diagnostics',
-          '- Docker / AWS / GitLab',
-          '',
-          'Connectivity & Platforms',
-          '- TCP/IP / VSAT / routing',
-          '- IoT / telematics / maritime systems',
-          '- Enterprise SaaS',
-          '',
-          'Customer Solutions',
-          '- Stakeholder communication',
-          '- Root cause analysis',
-          '- Cross-team coordination',
-          '- Operational documentation',
+          'TECHNICAL TOOLKIT',
+          'Linux • PostgreSQL • SQL • Grafana • GitLab • AWS • Docker • SSH • tcpdump',
+          'TCP/IP • DNS • REST APIs • JSON/XML • Postman • Python • PowerShell • Git',
+          'Jira • Salesforce • Zendesk • Confluence • Excel • FOTA Web',
+          'Teltonika • Ruptela • CANBus • GNSS • BLE Sensors',
+          'Firmware & Device Management',
+        ].join('\n'),
+      )
+      return
+    }
+
+    if (command === 'expertise') {
+      appendOutput(
+        [
+          'CORE EXPERTISE',
+          'Solutions & Operations: L3 Escalations • Incident Management • RCA • Implementations • Go-Lives',
+          'Infrastructure: Linux • AWS • Docker • SSH • TCP/IP • VSAT • Remote Diagnostics',
+          'Data & Observability: PostgreSQL • SQL • Grafana • Log Analysis • tcpdump',
+          'Workflow: GitLab • Jira • Bug Reports • Fix Validation • Technical Documentation',
+          'IoT & Telematics: GPS • CANBus • FOTA • Teltonika • Ruptela • Sensors • Firmware',
+          'Customer Leadership: Enterprise Customers • Field Visits • Captains • Fleet & IT Managers • EMEA',
+        ].join('\n'),
+      )
+      return
+    }
+
+    if (command === 'impact') {
+      appendOutput(
+        [
+          'SELECTED IMPACT',
+          '240-day vessel outage restored through onboard intervention',
+          '1+ year vessel outage restored and returned to service',
+          '6-month escalation solved within one week',
+          '2 stolen vehicles recovered without live GPS transmission',
+          '150+ vessel portfolio supported across international shipping groups',
+          'Confluence operational guides created for GRUB access and VSAT connectivity',
+          'Daily online orders increased by 450% within six months in an earlier digital operations role',
+        ].join('\n'),
+      )
+      return
+    }
+
+    if (command === 'languages') {
+      appendOutput(
+        [
+          'LANGUAGES',
+          'Greek: Native',
+          'German: Native',
+          'English: Fluent',
+        ].join('\n'),
+      )
+      return
+    }
+
+    if (command === 'education') {
+      appendOutput(
+        [
+          'EDUCATION & PROFESSIONAL DEVELOPMENT',
+          'American College of Greece | BSc studies in Computer Information Systems | 2002 - 2009',
+          'Kaiserslautern Technical University | Computer Science studies | 1999 - 2002',
+          'University of Toronto | Learn to Program in Python | 90.1% | 2016',
         ].join('\n'),
       )
       return
     }
 
     if (command === 'incidents' || command === 'cases') {
-      typeOutput(
+      appendOutput(
         [
-          'NOTABLE OPERATIONAL INCIDENTS',
-          '',
+          'OPERATIONAL CASE FILES',
           '001  Critical vessel communications restored after 240+ days',
           '002  Long-term vessel failure recovered after more than one year',
           '003  Six-month escalation resolved within one week',
           '004  Two stolen vehicles located without live GPS',
           '005  Complex field procedures standardised in Confluence',
-          '',
           'Use: case 001',
         ].join('\n'),
       )
@@ -466,25 +460,20 @@ function OperationsTerminal({
       }[code]
 
       if (match) {
-        appendLine({ type: 'system', text: `Opening secure case file ${match}...` })
+        appendOutput(`Opening secure case file ${match}...`, 'system')
         onOpenCase(match)
       } else {
-        typeOutput('Unknown case. Valid values: 001, 002, 003, 004, 005', 'system')
+        appendOutput('Unknown case. Valid values: 001, 002, 003, 004, 005', 'system')
       }
       return
     }
 
     if (command === 'contact') {
-      typeOutput(
+      appendOutput(
         [
           'SECURE CONTACT',
-          '',
           'Preferred channel: LinkedIn',
-          'Response time: Usually within 24 hours',
-          '',
-          'No personal phone number, home address or direct email',
-          'is published on this portfolio.',
-          '',
+          'No personal phone number, home address, or direct email is published on this portfolio.',
           'Run: linkedin',
         ].join('\n'),
       )
@@ -492,33 +481,19 @@ function OperationsTerminal({
     }
 
     if (command === 'linkedin') {
-      appendLine({ type: 'system', text: 'Opening LinkedIn in a new tab...' })
+      appendOutput('Opening LinkedIn in a new tab...', 'system')
       window.open('https://www.linkedin.com/in/anastasios-kalokerinos/', '_blank', 'noopener,noreferrer')
       return
     }
 
-    if (command === 'whoami') {
-      typeOutput(
-        [
-          'ANASTASIOS KALOKERINOS',
-          'Senior Technical Solutions & Operations Specialist',
-          '',
-          'Enterprise SaaS / Maritime AI / IoT / Linux / PostgreSQL',
-          'Incident ownership / customer solutions / operational recovery',
-        ].join('\n'),
-      )
-      return
-    }
-
     if (command === 'status') {
-      typeOutput(
+      appendOutput(
         [
           'PORTFOLIO STATUS: ONLINE',
           'CONTACT MODE: LINKEDIN ONLY',
           'PUBLIC PERSONAL DATA: MINIMISED',
           'CUSTOMER DATA: REDACTED',
           'INCIDENT SUMMARIES: ANONYMISED',
-          'SYSTEMS OPERATIONAL',
         ].join('\n'),
       )
       return
@@ -529,7 +504,7 @@ function OperationsTerminal({
       return
     }
 
-    typeOutput(`Command not found: ${command}. Type "help".`, 'system')
+    appendOutput(`Command not found: ${command}. Type "help".`, 'system')
   }
 
   return (
@@ -537,9 +512,9 @@ function OperationsTerminal({
       <div className="section-heading">
         <div>
           <div className="section-label">05 / OPERATIONS TERMINAL</div>
-          <h2>Explore the portfolio by command.</h2>
+          <h2>Explore the full professional profile.</h2>
         </div>
-        <p>Commands return information inside the console. Case commands open anonymised reports.</p>
+        <p>Compact command output with career, education, technical skills and case files.</p>
       </div>
 
       <div className="interactive-terminal">
@@ -549,7 +524,7 @@ function OperationsTerminal({
             <span />
             <span />
           </div>
-          <strong>AK-OPS / SECURE SESSION</strong>
+          <strong>AK-OPS / PROFESSIONAL PROFILE</strong>
           <small>CONNECTED</small>
         </div>
 
@@ -559,7 +534,6 @@ function OperationsTerminal({
               {line.type === 'input' ? `ak@operations:~$ ${line.text}` : line.text}
             </pre>
           ))}
-          {isTyping && <div className="terminal-typing">processing<span className="terminal-cursor">_</span></div>}
         </div>
 
         <form
@@ -577,9 +551,8 @@ function OperationsTerminal({
             autoComplete="off"
             spellCheck={false}
             placeholder='type "help"'
-            disabled={isTyping}
           />
-          <button type="submit" disabled={isTyping}>RUN</button>
+          <button type="submit">RUN</button>
         </form>
       </div>
     </section>

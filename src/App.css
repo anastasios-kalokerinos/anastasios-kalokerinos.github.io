@@ -862,3 +862,43 @@ footer { min-height: 74px; border-top: 1px solid var(--line); padding: 0 max(24p
   0%, 48% { opacity: 1; }
   49%, 100% { opacity: 0; }
 }
+
+/* Compact terminal CV profile */
+.terminal-output {
+  height: 420px;
+  padding: 18px 22px;
+}
+
+.terminal-line {
+  margin: 0 0 4px;
+  line-height: 1.35;
+  font-size: 0.71rem;
+}
+
+.terminal-output pre:empty {
+  display: none;
+}
+
+.terminal-input-row {
+  min-height: 54px;
+}
+
+.terminal-input-row input {
+  height: 52px;
+}
+
+.terminal-input-row button {
+  min-width: 76px;
+}
+
+@media (max-width: 700px) {
+  .terminal-output {
+    height: 360px;
+    padding: 16px;
+  }
+
+  .terminal-line {
+    font-size: 0.66rem;
+    line-height: 1.3;
+  }
+}
