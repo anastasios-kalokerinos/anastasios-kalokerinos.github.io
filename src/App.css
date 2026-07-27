@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
   --bg: #05080b;
@@ -328,5 +328,202 @@ footer { min-height: 74px; border-top: 1px solid var(--line); padding: 0 max(24p
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Operational case studies V2 */
+.case-file-modal {
+  width: min(940px, 100%);
+  padding: 0;
+  border-color: rgba(71, 224, 189, 0.5);
+}
+
+.case-file-header {
+  min-height: 110px;
+  padding: 30px 36px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background:
+    linear-gradient(90deg, rgba(71, 224, 189, 0.07), transparent 55%),
+    rgba(4, 11, 14, 0.94);
+}
+
+.case-file-id {
+  margin-top: 10px;
+  color: var(--text);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.15rem;
+  letter-spacing: 0.08em;
+}
+
+.case-file-stamp {
+  padding: 10px 14px;
+  border: 1px solid var(--line-strong);
+  color: var(--green);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  transform: rotate(-2deg);
+}
+
+.case-file-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+
+.case-file-meta div {
+  min-height: 88px;
+  padding: 20px 22px;
+  border-right: 1px solid var(--line);
+  background: rgba(5, 12, 15, 0.76);
+}
+
+.case-file-meta span,
+.case-file-meta strong {
+  display: block;
+}
+
+.case-file-meta span {
+  color: var(--muted);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+}
+
+.case-file-meta strong {
+  margin-top: 9px;
+  color: var(--green);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+}
+
+.case-file-modal > .modal-icon,
+.case-file-modal > h2,
+.case-file-modal > .case-lead,
+.case-file-modal > .case-report-grid,
+.case-file-modal > .confidentiality-note,
+.case-file-modal > .tag-list {
+  margin-left: 36px;
+  margin-right: 36px;
+}
+
+.case-file-modal > h2 {
+  margin-top: 18px;
+  margin-bottom: 12px;
+  max-width: 760px;
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.case-lead {
+  max-width: 760px;
+  font-size: 0.95rem;
+}
+
+.case-report-grid {
+  margin-top: 36px;
+  border-top: 1px solid var(--line);
+}
+
+.case-report-grid section {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 28px;
+}
+
+.case-report-grid small {
+  color: var(--cyan);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+}
+
+.case-report-grid p {
+  margin: 0;
+}
+
+.case-investigation ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 12px;
+}
+
+.case-investigation li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.case-investigation li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.case-outcome {
+  background: linear-gradient(90deg, rgba(71, 224, 189, 0.06), transparent);
+}
+
+.case-outcome p {
+  color: #c9dcda;
+  font-weight: 500;
+}
+
+.confidentiality-note {
+  margin-top: 28px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #8da3a8;
+  background: rgba(5, 12, 15, 0.72);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.confidentiality-note svg {
+  flex: 0 0 auto;
+  color: var(--green);
+}
+
+.case-file-modal > .tag-list {
+  margin-top: 22px;
+  margin-bottom: 38px;
+}
+
+@media (max-width: 760px) {
+  .case-file-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .case-file-meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .case-report-grid section {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .case-file-modal > .modal-icon,
+  .case-file-modal > h2,
+  .case-file-modal > .case-lead,
+  .case-file-modal > .case-report-grid,
+  .case-file-modal > .confidentiality-note,
+  .case-file-modal > .tag-list {
+    margin-left: 24px;
+    margin-right: 24px;
   }
 }

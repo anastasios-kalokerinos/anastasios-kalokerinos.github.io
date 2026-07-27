@@ -26,53 +26,155 @@ import './App.css'
 type CaseStudy = {
   id: string
   status: string
+  priority: string
+  category: string
   duration: string
   title: string
   summary: string
+  situation: string
+  challenge: string
+  investigation: string[]
+  resolution: string
+  outcome: string
   tags: string[]
-  icon: 'ship' | 'vehicle' | 'incident'
+  icon: 'ship' | 'vehicle' | 'incident' | 'document'
 }
 
 const caseStudies: CaseStudy[] = [
   {
-    id: 'INC-240D',
-    status: 'RESOLVED',
+    id: 'CASE-2026-001',
+    status: 'CLOSED',
+    priority: 'HIGH',
+    category: 'MARITIME OPERATIONS',
     duration: '240+ DAYS OFFLINE',
-    title: 'Critical vessel outage restored',
+    title: 'Critical vessel communications restored',
     summary:
-      'Initiated and completed an onboard technical intervention that restored a production vessel after more than 240 days of outage.',
-    tags: ['On-site Intervention', 'Linux', 'Networking', 'Ownership'],
+      'An onboard intervention restored a production vessel after more than 240 days of outage.',
+    situation:
+      'A customer vessel had remained offline for approximately eight months following an unsuccessful hardware-related recovery path.',
+    challenge:
+      'Previous troubleshooting attempts had not restored service. The vessel required direct operational ownership, customer coordination and an on-site investigation.',
+    investigation: [
+      'Validated the active onboard processing unit',
+      'Reviewed the network path and router bypass options',
+      'Verified direct VSAT connectivity',
+      'Confirmed the communication target and system state',
+      'Tested the end-to-end service path on board',
+    ],
+    resolution:
+      'Identified that recovery attempts were targeting the inactive processing unit and re-established the correct communication path to the active system.',
+    outcome:
+      'Service was restored during the onboard visit, returning the vessel to operational status after more than 240 days offline.',
+    tags: ['On-site Intervention', 'Linux', 'Networking', 'Root Cause Analysis'],
     icon: 'ship',
   },
   {
-    id: 'INC-365D',
-    status: 'RESTORED',
+    id: 'CASE-2026-002',
+    status: 'CLOSED',
+    priority: 'HIGH',
+    category: 'MARITIME OPERATIONS',
     duration: '1+ YEAR OFFLINE',
     title: 'Long-term vessel failure recovered',
     summary:
-      'Diagnosed and restored a second production vessel that had remained non-operational for over one year.',
-    tags: ['Root Cause Analysis', 'Infrastructure', 'Maritime AI'],
+      'A second production vessel was restored after remaining non-operational for more than one year.',
+    situation:
+      'A vessel installation had remained unavailable for over one year and had not returned to service through previous support activity.',
+    challenge:
+      'The case required reconstruction of the technical history, validation of the current onboard environment and coordination across multiple operational stakeholders.',
+    investigation: [
+      'Rebuilt the troubleshooting timeline',
+      'Reviewed Linux system and service state',
+      'Validated network reachability and dependencies',
+      'Compared expected and actual deployment configuration',
+      'Coordinated technical checks with customer IT personnel',
+    ],
+    resolution:
+      'Isolated the blocking condition, aligned the active environment with the expected operational configuration and validated service recovery.',
+    outcome:
+      'The vessel returned to service after more than a year of failed operation.',
+    tags: ['Incident Ownership', 'Infrastructure', 'Customer Coordination', 'Recovery'],
     icon: 'ship',
   },
   {
-    id: 'ESC-6M',
+    id: 'CASE-2026-003',
     status: 'CLOSED',
+    priority: 'HIGH',
+    category: 'TECHNICAL ESCALATION',
     duration: 'SOLVED IN 1 WEEK',
     title: 'Six-month escalation resolved',
     summary:
-      'Took ownership of a complex issue that had resisted resolution for six months and delivered a working solution within one week.',
-    tags: ['PostgreSQL', 'Grafana', 'GitLab', 'Troubleshooting'],
+      'A complex issue that had remained unresolved for six months was solved within one week.',
+    situation:
+      'A recurring production issue had passed through a prolonged investigation without a stable resolution.',
+    challenge:
+      'The available evidence was fragmented across monitoring, database information, logs and prior support activity.',
+    investigation: [
+      'Reviewed historical troubleshooting and previous assumptions',
+      'Correlated Grafana observations with PostgreSQL data',
+      'Analysed Linux logs and service behaviour',
+      'Tracked the relevant implementation state through GitLab',
+      'Validated the final hypothesis against the live environment',
+    ],
+    resolution:
+      'Connected the available technical evidence, identified the actual root cause and implemented the required corrective action.',
+    outcome:
+      'The six-month escalation was fully resolved within one week of taking ownership.',
+    tags: ['PostgreSQL', 'Grafana', 'GitLab', 'Technical Escalation'],
     icon: 'incident',
   },
   {
-    id: 'REC-2X',
+    id: 'CASE-2025-004',
     status: 'RECOVERED',
+    priority: 'CRITICAL',
+    category: 'FLEET TELEMATICS',
     duration: '2 STOLEN VEHICLES',
     title: 'Vehicles located without live GPS',
     summary:
-      'Used telematics evidence and historical data to help locate two stolen vehicles whose tracking units were no longer transmitting GPS positions.',
-    tags: ['Telematics', 'Data Analysis', 'Incident Response'],
+      'Telematics evidence and historical data were used to help locate two stolen vehicles whose trackers were no longer transmitting.',
+    situation:
+      'Two stolen vehicles could not be located through normal live tracking because their installed devices had stopped sending GPS data.',
+    challenge:
+      'The investigation had to continue without current positions, relying instead on indirect telemetry and historical evidence.',
+    investigation: [
+      'Reviewed the last valid telemetry and movement history',
+      'Compared device behaviour before communication loss',
+      'Analysed available vehicle and telematics signals',
+      'Narrowed the likely location using operational evidence',
+      'Communicated actionable findings to the relevant stakeholders',
+    ],
+    resolution:
+      'Combined historical telemetry, device behaviour and contextual evidence to identify the likely location of each vehicle.',
+    outcome:
+      'Both stolen vehicles were successfully located despite the absence of live GPS transmissions.',
+    tags: ['Telematics', 'Data Analysis', 'Incident Response', 'Investigation'],
     icon: 'vehicle',
+  },
+  {
+    id: 'CASE-2026-005',
+    status: 'PUBLISHED',
+    priority: 'OPERATIONAL',
+    category: 'KNOWLEDGE SYSTEMS',
+    duration: '2 OPERATIONAL GUIDES',
+    title: 'Complex field procedures standardised',
+    summary:
+      'Two company Confluence guides converted difficult field procedures into repeatable operational instructions.',
+    situation:
+      'Critical field procedures depended heavily on individual knowledge and required clearer, reusable documentation.',
+    challenge:
+      'The guides had to be technically accurate, usable under operational pressure and applicable across multiple onboard computer architectures.',
+    investigation: [
+      'Mapped the complete GRUB access procedure',
+      'Documented ASUS and NUC hardware differences',
+      'Defined the Teltonika router bypass workflow',
+      'Validated direct VSAT connectivity steps',
+      'Converted the procedures into clear Confluence guidance',
+    ],
+    resolution:
+      'Created two structured How-To guides covering Linux GRUB access and direct VSAT connectivity through Teltonika router bypass procedures.',
+    outcome:
+      'The procedures became easier to execute consistently during field visits and remote support activity.',
+    tags: ['Documentation', 'Confluence', 'Linux', 'Operational Enablement'],
+    icon: 'document',
   },
 ]
 
@@ -167,6 +269,7 @@ function BootSequence({ onComplete }: { onComplete: () => void }) {
 function CaseIcon({ type }: { type: CaseStudy['icon'] }) {
   if (type === 'ship') return <Ship size={24} />
   if (type === 'vehicle') return <Radio size={24} />
+  if (type === 'document') return <BookOpen size={24} />
   return <Wrench size={24} />
 }
 
@@ -308,10 +411,10 @@ function App() {
         <section className="content-section incidents-section" id="incidents">
           <div className="section-heading">
             <div>
-              <div className="section-label">02 / SELECTED INCIDENTS</div>
-              <h2>Impossible problems. Documented outcomes.</h2>
+              <div className="section-label">02 / OPERATIONAL CASE STUDIES</div>
+              <h2>Declassified operational case files.</h2>
             </div>
-            <p>Customer and company names are intentionally excluded to protect confidentiality.</p>
+            <p>Customer names, asset identifiers and confidential implementation details are intentionally excluded.</p>
           </div>
           <div className="incident-grid">
             {caseStudies.map((item) => (
