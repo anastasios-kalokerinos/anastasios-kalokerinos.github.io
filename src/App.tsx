@@ -195,21 +195,21 @@ const experience = [
     company: 'Maritime AI Technology Company',
     role: 'Customer Support Specialist / Technical Solutions & Operations Scope',
     detail:
-      'Mission-critical maritime operations, Linux infrastructure, databases, monitoring, implementations, field interventions and customer-facing technical leadership across a portfolio of 150+ vessels.',
+      'Owns mission-critical maritime incidents across a portfolio of 150+ vessels. Daily work includes Linux and SSH troubleshooting, PostgreSQL and SQL investigation, Grafana monitoring, GitLab collaboration, AWS and Docker environments, implementations, field visits, customer coordination and production service restoration.',
   },
   {
     period: '2021 - 2026',
-    company: 'PowerFleet Β· Fleet Complete',
-    role: 'Technical Support Engineer L2 / Data Analyst β€” EMEA',
+    company: 'PowerFleet / Fleet Complete',
+    role: 'Technical Support Engineer L2 / Data Analyst - EMEA',
     detail:
-      'L2/L3 telematics diagnostics, CANBus investigations, device management, fleet integrations and technical advisory across Greece, DACH, Benelux and Baltic markets.',
+      'Delivered L2/L3 telematics support across Greece, DACH, Benelux and Baltic markets. Investigated CANBus, GNSS, firmware, hardware, integrations and historical telemetry; created technical playbooks and internal tools; and supported recovery of two stolen vehicles despite the loss of live GPS transmissions.',
   },
   {
     period: '2001 - 2021',
-    company: 'Technical & Customer Operations',
-    role: 'IT, Project Management, Microsoft Support and Digital Operations',
+    company: 'Technical, Customer and Digital Operations',
+    role: 'IT Support, Project Delivery, Microsoft Support and Digital Operations',
     detail:
-      'A broad technical foundation spanning infrastructure, software support, project delivery, e-commerce, customer operations and international environments.',
+      'Built a broad operational foundation across IT support, infrastructure, Microsoft technologies, project delivery, customer service, e-commerce and international business environments. This background developed the customer communication, ownership and practical troubleshooting approach used in current technical solutions work.',
   },
 ]
 
@@ -285,7 +285,7 @@ function OperationsTerminal({
 }) {
   const [input, setInput] = useState('')
   const [lines, setLines] = useState<TerminalLine[]>([
-    { type: 'system', text: 'AK Operations Terminal v1.0' },
+    { type: 'system', text: 'AK Operations Terminal v1.1' },
     { type: 'system', text: 'Type "help" to list available commands.' },
   ])
   const terminalBodyRef = useRef<HTMLDivElement>(null)
@@ -301,13 +301,8 @@ function OperationsTerminal({
     setLines((current) => [...current, { type, text }])
   }
 
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
   const runCommand = (rawCommand: string) => {
     const command = rawCommand.trim().toLowerCase()
-
     if (!command) return
 
     setLines((current) => [...current, { type: 'input', text: command }])
@@ -317,46 +312,101 @@ function OperationsTerminal({
       addOutput(
         [
           'AVAILABLE COMMANDS',
-          'about       - open operator profile',
-          'experience  - open career timeline',
-          'stack       - open technical stack',
-          'cases       - open operational case studies',
-          'case 001    - open the 240-day vessel recovery',
-          'case 002    - open the one-year vessel recovery',
-          'case 003    - open the six-month escalation',
-          'case 004    - open the stolen vehicle investigation',
-          'case 005    - open the documentation case',
-          'linkedin    - open LinkedIn in a new tab',
-          'contact     - open secure contact section',
-          'whoami      - show current professional profile',
-          'status      - show portfolio status',
-          'clear       - clear terminal output',
+          '',
+          'about       show professional profile',
+          'experience  show recent career experience',
+          'stack       show technical solutions stack',
+          'cases       list operational case files',
+          'case 001    open the 240-day vessel recovery',
+          'case 002    open the one-year vessel recovery',
+          'case 003    open the six-month escalation',
+          'case 004    open the stolen vehicle investigation',
+          'case 005    open the documentation case',
+          'whoami      show current positioning',
+          'status      show privacy and portfolio status',
+          'linkedin    open LinkedIn in a new tab',
+          'contact     show contact instructions',
+          'clear       clear terminal output',
         ].join('\n'),
       )
       return
     }
 
     if (command === 'about') {
-      addOutput('Opening operator profile...')
-      scrollToSection('about')
+      addOutput(
+        [
+          'ABOUT',
+          '',
+          'Senior Technical Solutions & Operations Specialist based in Greece.',
+          'Focused on customer-facing technical solutions, production incident ownership,',
+          'service restoration, operational delivery and cross-functional coordination.',
+          '',
+          'Current domains: Maritime AI, enterprise SaaS, IoT, telematics and fleet technology.',
+          'Working languages: Greek, English and German.',
+        ].join('\n'),
+      )
       return
     }
 
     if (command === 'experience') {
-      addOutput('Opening career timeline...')
-      scrollToSection('experience')
+      addOutput(
+        [
+          'RECENT EXPERIENCE',
+          '',
+          '[2026 - PRESENT] Maritime AI Technology Company',
+          'Customer Support Specialist / Technical Solutions & Operations Scope',
+          '- Portfolio responsibility across 150+ vessels',
+          '- Linux, SSH, PostgreSQL, SQL, Grafana, GitLab, AWS and Docker',
+          '- Customer-facing incident ownership, implementations and field visits',
+          '- Restored vessels after outages lasting 240+ days and over one year',
+          '',
+          '[2021 - 2026] PowerFleet / Fleet Complete',
+          'Technical Support Engineer L2 / Data Analyst - EMEA',
+          '- L2/L3 telematics support across Greece, DACH, Benelux and Baltics',
+          '- CANBus, GNSS, firmware, hardware and historical telemetry analysis',
+          '- Internal documentation, technical playbooks and investigation tools',
+          '- Helped locate two stolen vehicles without live GPS transmissions',
+          '',
+          '[EARLIER CAREER]',
+          '- IT support, Microsoft technologies, project delivery, customer operations',
+          '- E-commerce, digital operations and international business environments',
+        ].join('\n'),
+      )
       return
     }
 
     if (command === 'stack') {
-      addOutput('Opening technical stack...')
-      scrollToSection('stack')
+      addOutput(
+        [
+          'TECHNICAL SOLUTIONS STACK',
+          '',
+          'Operations      Incident ownership / service restoration / on-call',
+          'Systems         Linux / SSH / Docker',
+          'Data            PostgreSQL / SQL / telemetry analysis',
+          'Monitoring      Grafana / logs / production diagnostics',
+          'Delivery        GitLab / implementations / documentation',
+          'Cloud           AWS',
+          'Networking      TCP/IP / VSAT / router bypass / connectivity',
+          'Domains         Maritime AI / IoT / telematics / enterprise SaaS',
+        ].join('\n'),
+      )
       return
     }
 
     if (command === 'cases') {
-      addOutput('Opening operational case studies...')
-      scrollToSection('incidents')
+      addOutput(
+        [
+          'OPERATIONAL CASE FILES',
+          '',
+          '001  Critical vessel communications restored after 240+ days',
+          '002  Long-term vessel failure recovered after 1+ year',
+          '003  Six-month technical escalation resolved within one week',
+          '004  Two stolen vehicles located without live GPS',
+          '005  Complex field procedures standardised in Confluence',
+          '',
+          'Use: case 001',
+        ].join('\n'),
+      )
       return
     }
 
@@ -371,7 +421,7 @@ function OperationsTerminal({
       }[code]
 
       if (match) {
-        addOutput(`Opening ${match}...`)
+        addOutput(`Opening secure case file ${match}...`)
         onOpenCase(match)
       } else {
         addOutput('Unknown case. Valid values: 001, 002, 003, 004, 005', 'system')
@@ -379,28 +429,46 @@ function OperationsTerminal({
       return
     }
 
-    if (command === 'linkedin') {
-      addOutput('Opening LinkedIn...')
-      window.open('https://www.linkedin.com/in/anastasios-kalokerinos/', '_blank', 'noopener,noreferrer')
-      return
-    }
-
-    if (command === 'contact') {
-      addOutput('Opening secure contact section...')
-      scrollToSection('contact')
-      return
-    }
-
     if (command === 'whoami') {
       addOutput(
-        'Anastasios Kalokerinos\nSenior Technical Solutions & Operations Specialist\nEnterprise SaaS / Maritime AI / IoT / Linux / PostgreSQL / Customer Solutions',
+        [
+          'ANASTASIOS KALOKERINOS',
+          'Senior Technical Solutions & Operations Specialist',
+          '',
+          'Enterprise SaaS / Maritime AI / IoT / Linux / PostgreSQL',
+          'Incident ownership / customer solutions / operational recovery',
+        ].join('\n'),
       )
       return
     }
 
     if (command === 'status') {
       addOutput(
-        'PORTFOLIO STATUS: ONLINE\nCONTACT MODE: LINKEDIN ONLY\nPUBLIC PERSONAL DATA: MINIMISED\nCUSTOMER DATA: REDACTED',
+        [
+          'PORTFOLIO STATUS: ONLINE',
+          'CONTACT MODE: LINKEDIN ONLY',
+          'PUBLIC PERSONAL DATA: MINIMISED',
+          'CUSTOMER DATA: REDACTED',
+          'SOURCE REPOSITORY: NOT LINKED FROM PORTFOLIO',
+        ].join('\n'),
+      )
+      return
+    }
+
+    if (command === 'linkedin') {
+      addOutput('Opening LinkedIn in a new tab...')
+      window.open('https://www.linkedin.com/in/anastasios-kalokerinos/', '_blank', 'noopener,noreferrer')
+      return
+    }
+
+    if (command === 'contact') {
+      addOutput(
+        [
+          'SECURE CONTACT',
+          '',
+          'Use the LinkedIn button in the Contact section or run: linkedin',
+          'No personal phone number, home address or direct email is published.',
+        ].join('\n'),
       )
       return
     }
@@ -420,7 +488,7 @@ function OperationsTerminal({
           <div className="section-label">05 / OPERATIONS TERMINAL</div>
           <h2>Explore the portfolio by command.</h2>
         </div>
-        <p>Use the terminal to navigate, inspect case files and open professional links.</p>
+        <p>Commands return information inside the console. Case commands open protected summaries.</p>
       </div>
 
       <div className="interactive-terminal">
@@ -494,7 +562,8 @@ function App() {
           <a href="#incidents" onClick={() => setMenuOpen(false)}>Case Studies</a>
           <a href="#stack" onClick={() => setMenuOpen(false)}>Stack</a>
           <a href="#experience" onClick={() => setMenuOpen(false)}>Experience</a>
-          <a href="#terminal" onClick={() => setMenuOpen(false)}>Terminal</a>`r`n          <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+          <a href="#terminal" onClick={() => setMenuOpen(false)}>Terminal</a>
+          <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
 
         <div className="system-status">
@@ -539,17 +608,44 @@ function App() {
               </div>
               <Activity size={24} />
             </div>
-            <div className="profile-orbit">
-              <div className="orbit orbit-one" />
-              <div className="orbit orbit-two" />
+                        <div className="profile-orbit radar-console">
+              <div className="radar-grid" />
+              <div className="radar-sweep" />
+              <div className="radar-ring radar-ring-one" />
+              <div className="radar-ring radar-ring-two" />
+              <div className="radar-ring radar-ring-three" />
+
+              <div className="radar-target target-one">
+                <span />
+                <small>INC-001</small>
+              </div>
+              <div className="radar-target target-two">
+                <span />
+                <small>OPS-150+</small>
+              </div>
+              <div className="radar-target target-three">
+                <span />
+                <small>EMEA</small>
+              </div>
+              <div className="radar-target target-four">
+                <span />
+                <small>DB</small>
+              </div>
+
               <div className="profile-core">
                 <span>AK</span>
                 <small>ONLINE</small>
               </div>
+
               <div className="node node-linux">LINUX</div>
               <div className="node node-data">DATA</div>
               <div className="node node-cloud">CLOUD</div>
               <div className="node node-ops">OPS</div>
+
+              <div className="radar-readout">
+                <span>SCAN MODE</span>
+                <strong>ACTIVE</strong>
+              </div>
             </div>
             <div className="panel-stats">
               <div><span>VESSEL PORTFOLIO</span><strong>150+</strong></div>
