@@ -1,4 +1,4 @@
-﻿import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   Activity,
   ArrowDown,
@@ -41,7 +41,7 @@ const caseStudies: CaseStudy[] = [
     title: 'Critical vessel outage restored',
     summary:
       'Initiated and completed an onboard technical intervention that restored a production vessel after more than 240 days of outage.',
-    tags: ['Field Engineering', 'Linux', 'Networking', 'Ownership'],
+    tags: ['On-site Intervention', 'Linux', 'Networking', 'Ownership'],
     icon: 'ship',
   },
   {
@@ -89,21 +89,21 @@ const stack = [
 
 const experience = [
   {
-    period: '2026 β€” PRESENT',
+    period: '2026 - PRESENT',
     company: 'Maritime AI Technology Company',
-    role: 'Customer Support Specialist Β· Technical Solutions & Operations Scope',
+    role: 'Customer Support Specialist / Technical Solutions & Operations Scope',
     detail:
       'Mission-critical maritime operations, Linux infrastructure, databases, monitoring, implementations, field interventions and customer-facing technical leadership across a portfolio of 150+ vessels.',
   },
   {
-    period: '2021 β€” 2026',
+    period: '2021 - 2026',
     company: 'PowerFleet Β· Fleet Complete',
     role: 'Technical Support Engineer L2 / Data Analyst β€” EMEA',
     detail:
       'L2/L3 telematics diagnostics, CANBus investigations, device management, fleet integrations and technical advisory across Greece, DACH, Benelux and Baltic markets.',
   },
   {
-    period: '2001 β€” 2021',
+    period: '2001 - 2021',
     company: 'Technical & Customer Operations',
     role: 'IT, Project Management, Microsoft Support and Digital Operations',
     detail:
@@ -214,15 +214,14 @@ function App() {
           <div className="hero-copy">
             <div className="eyebrow">
               <ShieldCheck size={16} />
-              SENIOR TECHNICAL SOLUTIONS & OPERATIONS ENGINEER
+              SENIOR TECHNICAL SOLUTIONS & OPERATIONS SPECIALIST
             </div>
             <h1>
               Restoring systems.
               <span>Solving the impossible.</span>
             </h1>
             <p>
-              I work at the intersection of customers, infrastructure and engineeringβ€”taking ownership of
-              complex production incidents and turning uncertainty into stable, measurable outcomes.
+              I work at the intersection of customers, technical systems and business operations - taking ownership of complex production incidents and turning uncertainty into stable, measurable outcomes.
             </p>
             <div className="hero-actions">
               <a className="primary-action" href="#incidents">
@@ -233,7 +232,7 @@ function App() {
               </a>
             </div>
             <div className="hero-meta">
-              <span><Globe2 size={16} /> Based in Greece Β· International scope</span>
+              <span><Globe2 size={16} /> Based in Greece / International scope</span>
               <span><BriefcaseBusiness size={16} /> 15+ years technical experience</span>
             </div>
           </div>
@@ -261,7 +260,7 @@ function App() {
             <div className="panel-stats">
               <div><span>VESSEL PORTFOLIO</span><strong>150+</strong></div>
               <div><span>REGIONS</span><strong>EMEA</strong></div>
-              <div><span>LANGUAGES</span><strong>GR Β· EN Β· DE</strong></div>
+              <div><span>LANGUAGES</span><strong>GR / EN / DE</strong></div>
               <div><span>INCIDENT MODE</span><strong className="green-text">READY</strong></div>
             </div>
           </div>
@@ -282,7 +281,7 @@ function App() {
           <div className="section-label">01 / OPERATOR PROFILE</div>
           <div className="section-grid">
             <div>
-              <h2>Technical depth with customer-level ownership.</h2>
+              <h2>Technical solutions with customer-level ownership.</h2>
             </div>
             <div className="about-copy">
               <p>
@@ -297,7 +296,7 @@ function App() {
               <div className="principle">
                 <Terminal size={20} />
                 <span>
-                  <small>ENGINEERING PRINCIPLE</small>
+                  <small>SOLUTIONS PRINCIPLE</small>
                   Success is not the number of tickets closed. It is the operational confidence that remains
                   after the incident is over.
                 </span>
