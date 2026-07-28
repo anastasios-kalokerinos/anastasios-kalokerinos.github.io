@@ -2187,3 +2187,142 @@ footer { min-height: 74px; border-top: 1px solid var(--line); padding: 0 max(24p
     grid-template-columns: 1fr;
   }
 }
+
+/* Truly Interactive Case Dossier V9.3 */
+.case-dossier-tabs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.case-dossier-tabs button > span {
+  color: #496169;
+  font-size: 0.52rem;
+}
+
+.case-dossier-tabs button.active > span {
+  color: var(--green);
+}
+
+.case-tab-live-panel {
+  animation: dossierPanelEnter 0.28s ease;
+}
+
+.case-dossier-controls {
+  margin-top: 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 130px 1fr 130px;
+  gap: 16px;
+  align-items: center;
+}
+
+.case-dossier-controls > button {
+  min-height: 42px;
+  border: 1px solid rgba(71, 224, 189, 0.32);
+  background: rgba(71, 224, 189, 0.05);
+  color: var(--green);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.59rem;
+  cursor: pointer;
+}
+
+.case-dossier-controls > button:hover:not(:disabled) {
+  background: rgba(71, 224, 189, 0.12);
+}
+
+.case-dossier-controls > button:disabled {
+  opacity: 0.28;
+  cursor: not-allowed;
+}
+
+.case-dossier-controls > div {
+  text-align: center;
+}
+
+.case-dossier-controls span,
+.case-dossier-controls small {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.case-dossier-controls span {
+  color: #c9d7da;
+  font-size: 0.64rem;
+}
+
+.case-dossier-controls small {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 0.51rem;
+}
+
+.case-dossier-evidence button {
+  min-height: 130px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  background: rgba(5, 12, 15, 0.76);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.case-dossier-evidence button:hover,
+.case-dossier-evidence button:focus {
+  border-color: rgba(71, 224, 189, 0.48);
+  background: rgba(71, 224, 189, 0.06);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+.case-dossier-evidence button strong,
+.case-dossier-evidence button small {
+  display: block;
+}
+
+.case-dossier-evidence button small {
+  margin-top: 20px;
+  color: #557078;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+}
+
+.case-dossier-step-index {
+  border: 1px solid rgba(71, 224, 189, 0.4);
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.case-dossier-step-index:hover,
+.case-dossier-step-index:focus {
+  background: rgba(71, 224, 189, 0.13);
+  transform: scale(1.06);
+  outline: none;
+}
+
+@keyframes dossierPanelEnter {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 620px) {
+  .case-dossier-controls {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .case-dossier-controls > div {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+}

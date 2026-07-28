@@ -1009,10 +1009,203 @@ function GlobalOperationsCenter() {
     </section>
   )
 }
+function InteractiveCaseDossier({
+  caseItem,
+  onClose,
+}: {
+  caseItem: CaseStudy
+  onClose: () => void
+}) {
+  const tabs: { id: CaseTab; label: string }[] = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'timeline', label: 'Timeline' },
+    { id: 'evidence', label: 'Evidence' },
+    { id: 'resolution', label: 'Resolution' },
+  ]
+
+  const [activeTab, setActiveTab] = useState<CaseTab>('overview')
+  const activeIndex = tabs.findIndex((tab) => tab.id === activeTab)
+
+  useEffect(() => {
+    setActiveTab('overview')
+  }, [caseItem.id])
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+        return
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        setActiveTab(tabs[Math.min(activeIndex + 1, tabs.length - 1)].id)
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        setActiveTab(tabs[Math.max(activeIndex - 1, 0)].id)
+      }
+    }
+
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [activeIndex, onClose])
+
+  const goPrevious = () => {
+    setActiveTab(tabs[Math.max(activeIndex - 1, 0)].id)
+  }
+
+  const goNext = () => {
+    setActiveTab(tabs[Math.min(activeIndex + 1, tabs.length - 1)].id)
+  }
+
+  return (
+    <div className="case-dossier-overlay" onClick={onClose}>
+      <section className="case-dossier-shell" onClick={(event) => event.stopPropagation()}>
+        <header className="case-dossier-top">
+          <div>
+            <span>DECLASSIFIED OPERATIONAL DOSSIER</span>
+            <strong>{caseItem.id}</strong>
+          </div>
+          <button type="button" onClick={onClose} aria-label="Close case file">
+            <X size={24} />
+          </button>
+        </header>
+
+        <div className="case-dossier-meta">
+          <div><span>STATUS</span><strong>{caseItem.status}</strong></div>
+          <div><span>PRIORITY</span><strong>{caseItem.priority}</strong></div>
+          <div><span>CATEGORY</span><strong>{caseItem.category}</strong></div>
+          <div><span>DURATION</span><strong>{caseItem.duration}</strong></div>
+        </div>
+
+        <div className="case-dossier-title">
+          <div className="case-dossier-icon"><CaseIcon type={caseItem.icon} /></div>
+          <div>
+            <h2>{caseItem.title}</h2>
+            <p>{caseItem.summary}</p>
+          </div>
+        </div>
+
+        <nav className="case-dossier-tabs" role="tablist" aria-label="Case file sections">
+          {tabs.map((tab, index) => (
+            <button
+              key={tab.id}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === tab.id}
+              className={activeTab === tab.id ? 'active' : ''}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="case-dossier-scroll">
+          <div className="case-tab-live-panel" key={`${caseItem.id}-${activeTab}`}>
+            {activeTab === 'overview' && (
+              <div className="case-dossier-overview">
+                <article>
+                  <span>01 / SITUATION</span>
+                  <p>{caseItem.situation}</p>
+                </article>
+                <article>
+                  <span>02 / CHALLENGE</span>
+                  <p>{caseItem.challenge}</p>
+                </article>
+                <article>
+                  <span>03 / INVESTIGATION</span>
+                  <ul>
+                    {caseItem.investigation.map((step) => <li key={step}>{step}</li>)}
+                  </ul>
+                </article>
+              </div>
+            )}
+
+            {activeTab === 'timeline' && (
+              <div className="case-dossier-timeline">
+                {(caseFileDetails[caseItem.id]?.timeline ?? []).map((step, index) => (
+                  <article key={step}>
+                    <button
+                      type="button"
+                      className="case-dossier-step-index"
+                      aria-label={`Timeline step ${index + 1}`}
+                    >
+                      {String(index + 1).padStart(2, '0')}
+                    </button>
+                    <div>
+                      <span>OPERATIONAL STEP</span>
+                      <p>{step}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'evidence' && (
+              <div className="case-dossier-evidence">
+                {(caseFileDetails[caseItem.id]?.evidence ?? []).map((item, index) => (
+                  <button type="button" key={item}>
+                    <span>EVIDENCE {String(index + 1).padStart(2, '0')}</span>
+                    <strong>{item}</strong>
+                    <small>CLICK TO HIGHLIGHT</small>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {activeTab === 'resolution' && (
+              <div className="case-dossier-resolution">
+                <article>
+                  <span>RESOLUTION</span>
+                  <p>{caseItem.resolution}</p>
+                </article>
+                <article className="case-dossier-outcome">
+                  <span>OUTCOME</span>
+                  <p>{caseItem.outcome}</p>
+                </article>
+                <article>
+                  <span>LESSONS LEARNED</span>
+                  <ul>
+                    {(caseFileDetails[caseItem.id]?.lessons ?? []).map((lesson) => <li key={lesson}>{lesson}</li>)}
+                  </ul>
+                </article>
+              </div>
+            )}
+          </div>
+
+          <div className="case-dossier-controls">
+            <button type="button" onClick={goPrevious} disabled={activeIndex === 0}>
+              ← Previous
+            </button>
+            <div>
+              <span>{String(activeIndex + 1).padStart(2, '0')} / 04</span>
+              <small>Use tabs or keyboard arrows</small>
+            </div>
+            <button type="button" onClick={goNext} disabled={activeIndex === tabs.length - 1}>
+              Next →
+            </button>
+          </div>
+
+          <div className="case-dossier-confidentiality">
+            <ShieldCheck size={18} />
+            Customer names, vessel names, system identifiers and confidential implementation details have been removed.
+          </div>
+
+          <div className="case-dossier-tags">
+            {caseItem.tags.map((tag) => <span key={tag}>{tag}</span>)}
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
 function App() {
   const [booted, setBooted] = useState(false)
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null)
-  const [selectedCaseTab, setSelectedCaseTab] = useState<CaseTab>('overview')
   const [menuOpen, setMenuOpen] = useState(false)
 
   if (!booted) {
@@ -1182,7 +1375,7 @@ function App() {
           </div>
           <div className="incident-grid">
             {caseStudies.map((item) => (
-              <button className="incident-card" key={item.id} onClick={() => { setSelectedCase(item); setSelectedCaseTab('overview') }}>
+              <button className="incident-card" key={item.id} onClick={() => { setSelectedCase(item) }}>
                 <div className="incident-topline">
                   <span className="incident-icon"><CaseIcon type={item.icon} /></span>
                   <span className="incident-id">{item.id}</span>
@@ -1267,7 +1460,7 @@ function App() {
         <OperationsTerminal
           onOpenCase={(caseId) => {
             const match = caseStudies.find((item) => item.id === caseId)
-            if (match) { setSelectedCase(match); setSelectedCaseTab('overview') }
+            if (match) { setSelectedCase(match) }
           }}
         />
 
@@ -1300,129 +1493,11 @@ function App() {
         <span className="footer-status"><span className="status-dot" /> ONLINE</span>
       </footer>
 
-                  {selectedCase && (
-        <div className="case-dossier-overlay" onClick={() => setSelectedCase(null)}>
-          <section className="case-dossier-shell" onClick={(event) => event.stopPropagation()}>
-            <header className="case-dossier-top">
-              <div>
-                <span>DECLASSIFIED OPERATIONAL DOSSIER</span>
-                <strong>{selectedCase.id}</strong>
-              </div>
-              <button type="button" onClick={() => setSelectedCase(null)} aria-label="Close case file">
-                <X size={24} />
-              </button>
-            </header>
-
-            <div className="case-dossier-meta">
-              <div><span>STATUS</span><strong>{selectedCase.status}</strong></div>
-              <div><span>PRIORITY</span><strong>{selectedCase.priority}</strong></div>
-              <div><span>CATEGORY</span><strong>{selectedCase.category}</strong></div>
-              <div><span>DURATION</span><strong>{selectedCase.duration}</strong></div>
-            </div>
-
-            <div className="case-dossier-title">
-              <div className="case-dossier-icon"><CaseIcon type={selectedCase.icon} /></div>
-              <div>
-                <h2>{selectedCase.title}</h2>
-                <p>{selectedCase.summary}</p>
-              </div>
-            </div>
-
-            <nav className="case-dossier-tabs" role="tablist" aria-label="Case file sections">
-              {([
-                ['overview', 'Overview'],
-                ['timeline', 'Timeline'],
-                ['evidence', 'Evidence'],
-                ['resolution', 'Resolution'],
-              ] as [CaseTab, string][]).map(([tab, label]) => (
-                <button
-                  key={tab}
-                  type="button"
-                  role="tab"
-                  aria-selected={selectedCaseTab === tab}
-                  className={selectedCaseTab === tab ? 'active' : ''}
-                  onClick={() => setSelectedCaseTab(tab)}
-                >
-                  {label}
-                </button>
-              ))}
-            </nav>
-
-            <div className="case-dossier-scroll">
-              {selectedCaseTab === 'overview' && (
-                <div className="case-dossier-overview">
-                  <article>
-                    <span>01 / SITUATION</span>
-                    <p>{selectedCase.situation}</p>
-                  </article>
-                  <article>
-                    <span>02 / CHALLENGE</span>
-                    <p>{selectedCase.challenge}</p>
-                  </article>
-                  <article>
-                    <span>03 / INVESTIGATION</span>
-                    <ul>
-                      {selectedCase.investigation.map((step) => <li key={step}>{step}</li>)}
-                    </ul>
-                  </article>
-                </div>
-              )}
-
-              {selectedCaseTab === 'timeline' && (
-                <div className="case-dossier-timeline">
-                  {(caseFileDetails[selectedCase.id]?.timeline ?? []).map((step, index) => (
-                    <article key={step}>
-                      <div className="case-dossier-step-index">{String(index + 1).padStart(2, '0')}</div>
-                      <div>
-                        <span>OPERATIONAL STEP</span>
-                        <p>{step}</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              )}
-
-              {selectedCaseTab === 'evidence' && (
-                <div className="case-dossier-evidence">
-                  {(caseFileDetails[selectedCase.id]?.evidence ?? []).map((item, index) => (
-                    <article key={item}>
-                      <span>EVIDENCE {String(index + 1).padStart(2, '0')}</span>
-                      <strong>{item}</strong>
-                    </article>
-                  ))}
-                </div>
-              )}
-
-              {selectedCaseTab === 'resolution' && (
-                <div className="case-dossier-resolution">
-                  <article>
-                    <span>RESOLUTION</span>
-                    <p>{selectedCase.resolution}</p>
-                  </article>
-                  <article className="case-dossier-outcome">
-                    <span>OUTCOME</span>
-                    <p>{selectedCase.outcome}</p>
-                  </article>
-                  <article>
-                    <span>LESSONS LEARNED</span>
-                    <ul>
-                      {(caseFileDetails[selectedCase.id]?.lessons ?? []).map((lesson) => <li key={lesson}>{lesson}</li>)}
-                    </ul>
-                  </article>
-                </div>
-              )}
-
-              <div className="case-dossier-confidentiality">
-                <ShieldCheck size={18} />
-                Customer names, vessel names, system identifiers and confidential implementation details have been removed.
-              </div>
-
-              <div className="case-dossier-tags">
-                {selectedCase.tags.map((tag) => <span key={tag}>{tag}</span>)}
-              </div>
-            </div>
-          </section>
-        </div>
+                        {selectedCase && (
+        <InteractiveCaseDossier
+          caseItem={selectedCase}
+          onClose={() => setSelectedCase(null)}
+        />
       )}
     </div>
   )
