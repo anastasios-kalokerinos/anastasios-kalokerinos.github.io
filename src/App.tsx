@@ -1024,11 +1024,62 @@ function InteractiveCaseDossier({
   ]
 
   const [activeTab, setActiveTab] = useState<CaseTab>('overview')
+  const [revealedCount, setRevealedCount] = useState(0)
+  const [isPlaying, setIsPlaying] = useState(true)
   const activeIndex = tabs.findIndex((tab) => tab.id === activeTab)
+
+  const panelItems = useMemo(() => {
+    if (activeTab === 'overview') {
+      return [
+        { label: '01 / SITUATION', body: caseItem.situation },
+        { label: '02 / CHALLENGE', body: caseItem.challenge },
+        { label: '03 / INVESTIGATION', body: caseItem.investigation.join('\n') },
+      ]
+    }
+
+    if (activeTab === 'timeline') {
+      return (caseFileDetails[caseItem.id]?.timeline ?? []).map((item, index) => ({
+        label: `STEP ${String(index + 1).padStart(2, '0')}`,
+        body: item,
+      }))
+    }
+
+    if (activeTab === 'evidence') {
+      return (caseFileDetails[caseItem.id]?.evidence ?? []).map((item, index) => ({
+        label: `EVIDENCE ${String(index + 1).padStart(2, '0')}`,
+        body: item,
+      }))
+    }
+
+    return [
+      { label: 'RESOLUTION', body: caseItem.resolution },
+      { label: 'OUTCOME', body: caseItem.outcome },
+      {
+        label: 'LESSONS LEARNED',
+        body: (caseFileDetails[caseItem.id]?.lessons ?? []).join('\n'),
+      },
+    ]
+  }, [activeTab, caseItem])
 
   useEffect(() => {
     setActiveTab('overview')
   }, [caseItem.id])
+
+  useEffect(() => {
+    setRevealedCount(0)
+    setIsPlaying(true)
+  }, [activeTab, caseItem.id])
+
+  useEffect(() => {
+    if (!isPlaying || revealedCount >= panelItems.length) return
+
+    const delay = revealedCount === 0 ? 420 : 760
+    const timer = window.setTimeout(() => {
+      setRevealedCount((current) => Math.min(current + 1, panelItems.length))
+    }, delay)
+
+    return () => window.clearTimeout(timer)
+  }, [isPlaying, panelItems.length, revealedCount])
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -1046,11 +1097,26 @@ function InteractiveCaseDossier({
         event.preventDefault()
         setActiveTab(tabs[Math.max(activeIndex - 1, 0)].id)
       }
+
+      if (event.key === ' ') {
+        event.preventDefault()
+        setIsPlaying((current) => !current)
+      }
     }
 
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
   }, [activeIndex, onClose])
+
+  const replay = () => {
+    setRevealedCount(0)
+    setIsPlaying(true)
+  }
+
+  const revealAll = () => {
+    setRevealedCount(panelItems.length)
+    setIsPlaying(false)
+  }
 
   const goPrevious = () => {
     setActiveTab(tabs[Math.max(activeIndex - 1, 0)].id)
@@ -1062,15 +1128,20 @@ function InteractiveCaseDossier({
 
   return (
     <div className="case-dossier-overlay" onClick={onClose}>
-      <section className="case-dossier-shell" onClick={(event) => event.stopPropagation()}>
+      <section className="case-dossier-shell cinematic-dossier" onClick={(event) => event.stopPropagation()}>
         <header className="case-dossier-top">
           <div>
             <span>DECLASSIFIED OPERATIONAL DOSSIER</span>
             <strong>{caseItem.id}</strong>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close case file">
-            <X size={24} />
-          </button>
+
+          <div className="dossier-top-actions">
+            <button type="button" onClick={replay}>REPLAY</button>
+            <button type="button" onClick={revealAll}>SHOW ALL</button>
+            <button type="button" onClick={onClose} aria-label="Close case file">
+              <X size={22} />
+            </button>
+          </div>
         </header>
 
         <div className="case-dossier-meta">
@@ -1105,74 +1176,49 @@ function InteractiveCaseDossier({
         </nav>
 
         <div className="case-dossier-scroll">
-          <div className="case-tab-live-panel" key={`${caseItem.id}-${activeTab}`}>
-            {activeTab === 'overview' && (
-              <div className="case-dossier-overview">
-                <article>
-                  <span>01 / SITUATION</span>
-                  <p>{caseItem.situation}</p>
-                </article>
-                <article>
-                  <span>02 / CHALLENGE</span>
-                  <p>{caseItem.challenge}</p>
-                </article>
-                <article>
-                  <span>03 / INVESTIGATION</span>
-                  <ul>
-                    {caseItem.investigation.map((step) => <li key={step}>{step}</li>)}
-                  </ul>
-                </article>
-              </div>
-            )}
+          <div className="cinematic-console-status">
+            <div>
+              <span>SEQUENCE</span>
+              <strong>{isPlaying ? 'PLAYING' : revealedCount >= panelItems.length ? 'COMPLETE' : 'PAUSED'}</strong>
+            </div>
+            <div className="cinematic-progress">
+              <span style={{ width: `${panelItems.length ? (revealedCount / panelItems.length) * 100 : 0}%` }} />
+            </div>
+            <button type="button" onClick={() => setIsPlaying((current) => !current)}>
+              {isPlaying ? 'PAUSE' : 'PLAY'}
+            </button>
+          </div>
 
-            {activeTab === 'timeline' && (
-              <div className="case-dossier-timeline">
-                {(caseFileDetails[caseItem.id]?.timeline ?? []).map((step, index) => (
-                  <article key={step}>
-                    <button
-                      type="button"
-                      className="case-dossier-step-index"
-                      aria-label={`Timeline step ${index + 1}`}
-                    >
-                      {String(index + 1).padStart(2, '0')}
-                    </button>
-                    <div>
-                      <span>OPERATIONAL STEP</span>
-                      <p>{step}</p>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            )}
+          <div className="cinematic-case-stage" key={`${caseItem.id}-${activeTab}`}>
+            {panelItems.map((item, index) => {
+              const isVisible = index < revealedCount
+              const isCurrent = index === revealedCount - 1
 
-            {activeTab === 'evidence' && (
-              <div className="case-dossier-evidence">
-                {(caseFileDetails[caseItem.id]?.evidence ?? []).map((item, index) => (
-                  <button type="button" key={item}>
-                    <span>EVIDENCE {String(index + 1).padStart(2, '0')}</span>
-                    <strong>{item}</strong>
-                    <small>CLICK TO HIGHLIGHT</small>
-                  </button>
-                ))}
-              </div>
-            )}
+              return (
+                <article
+                  className={`cinematic-case-block ${isVisible ? 'is-visible' : ''} ${isCurrent ? 'is-current' : ''}`}
+                  key={`${item.label}-${item.body}`}
+                >
+                  <div className="cinematic-block-label">
+                    <span>{item.label}</span>
+                    {isCurrent && isPlaying && <i className="cinematic-cursor">_</i>}
+                  </div>
 
-            {activeTab === 'resolution' && (
-              <div className="case-dossier-resolution">
-                <article>
-                  <span>RESOLUTION</span>
-                  <p>{caseItem.resolution}</p>
+                  <div className="cinematic-block-body">
+                    {item.body.split('\n').map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </div>
                 </article>
-                <article className="case-dossier-outcome">
-                  <span>OUTCOME</span>
-                  <p>{caseItem.outcome}</p>
-                </article>
-                <article>
-                  <span>LESSONS LEARNED</span>
-                  <ul>
-                    {(caseFileDetails[caseItem.id]?.lessons ?? []).map((lesson) => <li key={lesson}>{lesson}</li>)}
-                  </ul>
-                </article>
+              )
+            })}
+
+            {revealedCount === 0 && (
+              <div className="cinematic-loading">
+                <span>INITIALISING CASE FILE</span>
+                <i />
+                <i />
+                <i />
               </div>
             )}
           </div>
@@ -1183,7 +1229,7 @@ function InteractiveCaseDossier({
             </button>
             <div>
               <span>{String(activeIndex + 1).padStart(2, '0')} / 04</span>
-              <small>Use tabs or keyboard arrows</small>
+              <small>Arrows navigate • Space pauses • Esc closes</small>
             </div>
             <button type="button" onClick={goNext} disabled={activeIndex === tabs.length - 1}>
               Next →
