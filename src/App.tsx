@@ -941,7 +941,7 @@ function App() {
                   <h3>{title}</h3>
                 </div>
                 <div className="capability-items">
-                  {items.map((item) => <span key={item}>{item}</span>)}
+                  {items.map((item) => <span className="capability-pill" key={item}>{item}</span>)}
                 </div>
               </article>
             ))}
