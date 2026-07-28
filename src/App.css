@@ -2559,3 +2559,318 @@ footer { min-height: 74px; border-top: 1px solid var(--line); padding: 0 max(24p
     min-height: 310px;
   }
 }
+
+/* Live Report Writer V9.5 */
+.cinematic-writer-overlay {
+  padding: clamp(8px, 1.2vw, 18px);
+}
+
+.live-report-shell {
+  width: min(1480px, 98vw);
+  height: min(960px, 97vh);
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.live-report-header-reveal {
+  position: relative;
+  z-index: 2;
+  transform-origin: top;
+  animation: dossierHeaderOpen 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.live-report-title {
+  padding-top: clamp(16px, 2.2vh, 28px);
+  padding-bottom: clamp(16px, 2.2vh, 28px);
+}
+
+.live-report-title h2 {
+  font-size: clamp(1.65rem, 3.5vw, 3.6rem);
+}
+
+.live-report-tabs {
+  min-height: 50px;
+}
+
+.live-report-workspace {
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  background:
+    linear-gradient(rgba(71, 224, 189, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(71, 224, 189, 0.028) 1px, transparent 1px),
+    #040b0f;
+  background-size: 24px 24px;
+  animation: reportWorkspaceReveal 0.7s 0.48s ease both;
+}
+
+.report-terminal-bar {
+  min-height: 44px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(6, 15, 19, 0.96);
+}
+
+.report-terminal-bar > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.report-terminal-bar strong,
+.report-terminal-bar small {
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.08em;
+}
+
+.report-terminal-bar strong {
+  color: #a9bbc0;
+  font-size: 0.56rem;
+}
+
+.report-terminal-bar small {
+  color: var(--green);
+  font-size: 0.5rem;
+}
+
+.report-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green);
+  animation: reportLedPulse 1.8s ease-in-out infinite;
+}
+
+.live-typing-report {
+  min-height: 0;
+  padding: clamp(18px, 2.4vw, 34px);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+}
+
+.live-typing-report pre {
+  width: 100%;
+  margin: 0;
+  color: #a9bcc1;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(0.67rem, 0.78vw, 0.9rem);
+  line-height: 1.58;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.live-typing-report.is-dense pre {
+  font-size: clamp(0.59rem, 0.68vw, 0.78rem);
+  line-height: 1.45;
+}
+
+.report-caret {
+  color: var(--green);
+  animation: reportCaretBlink 0.75s steps(1) infinite;
+}
+
+.report-caret.is-complete {
+  color: var(--cyan);
+}
+
+.live-report-footer {
+  min-height: 58px;
+  padding: 10px 18px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  background: rgba(6, 15, 19, 0.97);
+}
+
+.live-report-footer span,
+.live-report-footer small {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.live-report-footer span {
+  color: var(--green);
+  font-size: 0.54rem;
+  letter-spacing: 0.08em;
+}
+
+.live-report-footer small {
+  margin-top: 4px;
+  color: #62777e;
+  font-size: 0.48rem;
+}
+
+.live-report-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.live-report-nav button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(71, 224, 189, 0.28);
+  background: rgba(71, 224, 189, 0.05);
+  color: var(--green);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.51rem;
+  cursor: pointer;
+}
+
+.live-report-nav button:hover:not(:disabled) {
+  background: rgba(71, 224, 189, 0.12);
+}
+
+.live-report-nav button:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+@keyframes dossierHeaderOpen {
+  0% {
+    opacity: 0;
+    transform: translateY(-18px) scaleY(0.88);
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scaleY(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes reportWorkspaceReveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes reportCaretBlink {
+  0%, 48% { opacity: 1; }
+  49%, 100% { opacity: 0; }
+}
+
+@keyframes reportLedPulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.82); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
+
+@media (max-height: 760px) {
+  .case-dossier-top {
+    min-height: 58px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .case-dossier-meta div {
+    min-height: 56px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .live-report-title {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .live-report-title h2 {
+    font-size: clamp(1.45rem, 3vw, 2.4rem);
+  }
+
+  .live-report-title p {
+    margin-top: 6px;
+    font-size: 0.75rem;
+  }
+
+  .live-report-tabs button {
+    min-height: 42px;
+  }
+
+  .live-typing-report {
+    padding-top: 14px;
+    padding-bottom: 14px;
+  }
+
+  .live-typing-report pre {
+    font-size: clamp(0.57rem, 0.67vw, 0.72rem);
+    line-height: 1.38;
+  }
+}
+
+@media (max-width: 760px) {
+  .live-report-shell {
+    width: 100%;
+    height: 100vh;
+  }
+
+  .case-dossier-meta {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .live-report-title {
+    grid-template-columns: auto 1fr;
+  }
+
+  .live-report-title h2 {
+    font-size: clamp(1.35rem, 7vw, 2rem);
+  }
+
+  .live-report-tabs {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .live-report-tabs button {
+    min-width: 0;
+    padding: 0 4px;
+    font-size: 0.48rem;
+  }
+
+  .live-report-tabs button span {
+    display: none;
+  }
+
+  .live-report-footer small {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .case-dossier-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .live-report-title {
+    padding-left: 14px;
+    padding-right: 14px;
+    gap: 10px;
+  }
+
+  .live-report-title p {
+    display: none;
+  }
+
+  .report-terminal-bar {
+    padding: 0 12px;
+  }
+
+  .live-report-footer {
+    padding: 8px 12px;
+  }
+
+  .live-report-nav button {
+    padding: 0 8px;
+  }
+}
