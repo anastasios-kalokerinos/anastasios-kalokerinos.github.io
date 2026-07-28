@@ -1300,37 +1300,35 @@ function App() {
         <span className="footer-status"><span className="status-dot" /> ONLINE</span>
       </footer>
 
-            {selectedCase && (
-        <div className="modal-backdrop" onClick={() => setSelectedCase(null)}>
-          <article className="case-modal case-file-modal case-file-v9" onClick={(event) => event.stopPropagation()}>
-            <button className="modal-close" onClick={() => setSelectedCase(null)} aria-label="Close">
-              <X />
-            </button>
-
-            <div className="case-file-header">
+                  {selectedCase && (
+        <div className="case-dossier-overlay" onClick={() => setSelectedCase(null)}>
+          <section className="case-dossier-shell" onClick={(event) => event.stopPropagation()}>
+            <header className="case-dossier-top">
               <div>
-                <div className="section-label">DECLASSIFIED OPERATIONAL DOSSIER</div>
-                <div className="case-file-id">{selectedCase.id}</div>
+                <span>DECLASSIFIED OPERATIONAL DOSSIER</span>
+                <strong>{selectedCase.id}</strong>
               </div>
-              <div className="case-file-stamp">{selectedCase.status}</div>
-            </div>
+              <button type="button" onClick={() => setSelectedCase(null)} aria-label="Close case file">
+                <X size={24} />
+              </button>
+            </header>
 
-            <div className="case-file-meta">
+            <div className="case-dossier-meta">
               <div><span>STATUS</span><strong>{selectedCase.status}</strong></div>
               <div><span>PRIORITY</span><strong>{selectedCase.priority}</strong></div>
               <div><span>CATEGORY</span><strong>{selectedCase.category}</strong></div>
               <div><span>DURATION</span><strong>{selectedCase.duration}</strong></div>
             </div>
 
-            <div className="case-file-title-block">
-              <div className="modal-icon"><CaseIcon type={selectedCase.icon} /></div>
+            <div className="case-dossier-title">
+              <div className="case-dossier-icon"><CaseIcon type={selectedCase.icon} /></div>
               <div>
                 <h2>{selectedCase.title}</h2>
-                <p className="case-lead">{selectedCase.summary}</p>
+                <p>{selectedCase.summary}</p>
               </div>
             </div>
 
-            <div className="case-tabs" role="tablist" aria-label="Case file sections">
+            <nav className="case-dossier-tabs" role="tablist" aria-label="Case file sections">
               {([
                 ['overview', 'Overview'],
                 ['timeline', 'Timeline'],
@@ -1338,54 +1336,54 @@ function App() {
                 ['resolution', 'Resolution'],
               ] as [CaseTab, string][]).map(([tab, label]) => (
                 <button
+                  key={tab}
                   type="button"
                   role="tab"
                   aria-selected={selectedCaseTab === tab}
                   className={selectedCaseTab === tab ? 'active' : ''}
-                  key={tab}
                   onClick={() => setSelectedCaseTab(tab)}
                 >
                   {label}
                 </button>
               ))}
-            </div>
+            </nav>
 
-            <div className="case-tab-panel">
+            <div className="case-dossier-scroll">
               {selectedCaseTab === 'overview' && (
-                <div className="case-report-grid compact-report-grid">
-                  <section>
-                    <small>01 / SITUATION</small>
+                <div className="case-dossier-overview">
+                  <article>
+                    <span>01 / SITUATION</span>
                     <p>{selectedCase.situation}</p>
-                  </section>
-                  <section>
-                    <small>02 / CHALLENGE</small>
+                  </article>
+                  <article>
+                    <span>02 / CHALLENGE</span>
                     <p>{selectedCase.challenge}</p>
-                  </section>
-                  <section className="case-investigation">
-                    <small>03 / INVESTIGATION</small>
+                  </article>
+                  <article>
+                    <span>03 / INVESTIGATION</span>
                     <ul>
                       {selectedCase.investigation.map((step) => <li key={step}>{step}</li>)}
                     </ul>
-                  </section>
+                  </article>
                 </div>
               )}
 
               {selectedCaseTab === 'timeline' && (
-                <div className="case-timeline-v9">
+                <div className="case-dossier-timeline">
                   {(caseFileDetails[selectedCase.id]?.timeline ?? []).map((step, index) => (
-                    <div className="case-timeline-step" key={step}>
-                      <div className="timeline-marker">{String(index + 1).padStart(2, '0')}</div>
+                    <article key={step}>
+                      <div className="case-dossier-step-index">{String(index + 1).padStart(2, '0')}</div>
                       <div>
-                        <small>OPERATIONAL STEP</small>
+                        <span>OPERATIONAL STEP</span>
                         <p>{step}</p>
                       </div>
-                    </div>
+                    </article>
                   ))}
                 </div>
               )}
 
               {selectedCaseTab === 'evidence' && (
-                <div className="case-evidence-grid">
+                <div className="case-dossier-evidence">
                   {(caseFileDetails[selectedCase.id]?.evidence ?? []).map((item, index) => (
                     <article key={item}>
                       <span>EVIDENCE {String(index + 1).padStart(2, '0')}</span>
@@ -1396,34 +1394,34 @@ function App() {
               )}
 
               {selectedCaseTab === 'resolution' && (
-                <div className="case-resolution-v9">
-                  <section>
-                    <small>RESOLUTION</small>
+                <div className="case-dossier-resolution">
+                  <article>
+                    <span>RESOLUTION</span>
                     <p>{selectedCase.resolution}</p>
-                  </section>
-                  <section className="case-outcome">
-                    <small>OUTCOME</small>
+                  </article>
+                  <article className="case-dossier-outcome">
+                    <span>OUTCOME</span>
                     <p>{selectedCase.outcome}</p>
-                  </section>
-                  <section>
-                    <small>LESSONS LEARNED</small>
+                  </article>
+                  <article>
+                    <span>LESSONS LEARNED</span>
                     <ul>
                       {(caseFileDetails[selectedCase.id]?.lessons ?? []).map((lesson) => <li key={lesson}>{lesson}</li>)}
                     </ul>
-                  </section>
+                  </article>
                 </div>
               )}
-            </div>
 
-            <div className="confidentiality-note">
-              <ShieldCheck size={18} />
-              Customer names, vessel names, system identifiers and confidential implementation details have been removed.
-            </div>
+              <div className="case-dossier-confidentiality">
+                <ShieldCheck size={18} />
+                Customer names, vessel names, system identifiers and confidential implementation details have been removed.
+              </div>
 
-            <div className="tag-list case-file-tags">
-              {selectedCase.tags.map((tag) => <span key={tag}>{tag}</span>)}
+              <div className="case-dossier-tags">
+                {selectedCase.tags.map((tag) => <span key={tag}>{tag}</span>)}
+              </div>
             </div>
-          </article>
+          </section>
         </div>
       )}
     </div>
