@@ -7,14 +7,12 @@ import {
   BriefcaseBusiness,
   CheckCircle2,
   ChevronRight,
-  Cloud,
   Code2,
-  Database,
   ExternalLink,
   Globe2,
-  HardDrive,
   Network,
   Radio,
+  Server,
   ShieldCheck,
   Ship,
   Terminal,
@@ -178,15 +176,32 @@ const caseStudies: CaseStudy[] = [
   },
 ]
 
-const stack = [
-  { name: 'Linux & SSH', icon: Terminal, level: 'Daily operations' },
-  { name: 'PostgreSQL & SQL', icon: Database, level: 'Investigation & analysis' },
-  { name: 'Grafana', icon: Activity, level: 'Monitoring & diagnostics' },
-  { name: 'GitLab', icon: Code2, level: 'Engineering collaboration' },
-  { name: 'AWS', icon: Cloud, level: 'Cloud infrastructure' },
-  { name: 'Docker', icon: HardDrive, level: 'Container workflows' },
-  { name: 'Networking', icon: Network, level: 'TCP/IP, VSAT, routing' },
-  { name: 'IoT & Telematics', icon: Radio, level: 'Fleet & maritime systems' },
+const stackGroups = [
+  {
+    title: 'Infrastructure & Systems',
+    icon: Server,
+    items: ['Linux', 'Windows Server', 'AWS', 'Docker', 'GitLab', 'Grafana', 'PostgreSQL', 'SQL'],
+  },
+  {
+    title: 'Networking',
+    icon: Network,
+    items: ['TCP/IP', 'DNS', 'DHCP', 'NAT', 'Firewalls', 'Switches', 'VPN', 'SSH', 'Routing', 'VLAN', 'Port Forwarding', 'tcpdump', 'Network Diagnostics'],
+  },
+  {
+    title: 'IoT, Fleet & Maritime',
+    icon: Radio,
+    items: ['CANBus', 'GNSS', 'BLE Sensors', 'FOTA', 'Teltonika', 'Ruptela', 'IoT Devices', 'Firmware Management', 'VSAT', 'Serial Communications'],
+  },
+  {
+    title: 'APIs & Automation',
+    icon: Code2,
+    items: ['REST APIs', 'JSON', 'XML', 'Postman', 'PowerShell', 'Python', 'Git'],
+  },
+  {
+    title: 'Platforms & Delivery',
+    icon: BriefcaseBusiness,
+    items: ['Jira', 'Salesforce', 'Zendesk', 'Confluence', 'Excel', 'Incident Management', 'Implementations', 'Customer Solutions'],
+  },
 ]
 
 const experience = [
@@ -404,11 +419,13 @@ function OperationsTerminal({
       appendOutput(
         [
           'TECHNICAL TOOLKIT',
-          'Linux • PostgreSQL • SQL • Grafana • GitLab • AWS • Docker • SSH • tcpdump',
-          'TCP/IP • DNS • REST APIs • JSON/XML • Postman • Python • PowerShell • Git',
-          'Jira • Salesforce • Zendesk • Confluence • Excel • FOTA Web',
-          'Teltonika • Ruptela • CANBus • GNSS • BLE Sensors',
-          'Firmware & Device Management',
+'Infrastructure: Linux • Windows Server • AWS • Docker • SSH • TCP/IP • DNS • DHCP • NAT • Firewalls • Switches • VPN • Routing • VLAN • VSAT • Remote Diagnostics',
+'Networking: TCP/IP • DNS • DHCP • NAT • Firewalls • Switches • VPN • SSH • Routing • VLAN',
+'Diagnostics: tcpdump • Port Forwarding • Network Diagnostics • Log Analysis',
+'IoT & Maritime: Teltonika • Ruptela • CANBus • GNSS • BLE Sensors • VSAT',
+'APIs & Automation: REST APIs • JSON/XML • Postman • Python • PowerShell • Git',
+'Platforms: Jira • Salesforce • Zendesk • Confluence • Excel • FOTA Web',
+'Firmware & Device Management',
         ].join('\n'),
       )
       return
@@ -419,7 +436,7 @@ function OperationsTerminal({
         [
           'CORE EXPERTISE',
           'Solutions & Operations: L3 Escalations • Incident Management • RCA • Implementations • Go-Lives',
-          'Infrastructure: Linux • AWS • Docker • SSH • TCP/IP • VSAT • Remote Diagnostics',
+          'Infrastructure: Linux • Windows Server • AWS • Docker • SSH • TCP/IP • DNS • DHCP • NAT • Firewalls • Switches • VPN • Routing • VLAN • VSAT • Remote Diagnostics',
           'Data & Observability: PostgreSQL • SQL • Grafana • Log Analysis • tcpdump',
           'Workflow: GitLab • Jira • Bug Reports • Fix Validation • Technical Documentation',
           'IoT & Telematics: GPS • CANBus • FOTA • Teltonika • Ruptela • Sensors • Firmware',
@@ -767,7 +784,7 @@ function App() {
               <span>Solving the impossible.</span>
             </h1>
             <p>
-              I work at the intersection of customers, technical systems and business operations - taking ownership of complex production incidents and turning uncertainty into stable, measurable outcomes.
+              I work at the intersection of customers, technical systems, networking and business operations - taking ownership of complex production incidents and turning uncertainty into stable, measurable outcomes.
             </p>
             <div className="hero-actions">
               <a className="primary-action" href="#incidents">
@@ -916,15 +933,16 @@ function App() {
             </div>
             <p>Tools and environments used for investigations, operations and delivery.</p>
           </div>
-          <div className="stack-grid">
-            {stack.map(({ name, icon: Icon, level }) => (
-              <article className="stack-card" key={name}>
-                <Icon size={25} />
-                <div>
-                  <strong>{name}</strong>
-                  <span>{level}</span>
+                    <div className="capability-grid">
+            {stackGroups.map(({ title, icon: Icon, items }) => (
+              <article className="capability-card" key={title}>
+                <div className="capability-card-header">
+                  <span className="capability-icon"><Icon size={24} /></span>
+                  <h3>{title}</h3>
                 </div>
-                <CheckCircle2 size={17} className="stack-check" />
+                <div className="capability-items">
+                  {items.map((item) => <span key={item}>{item}</span>)}
+                </div>
               </article>
             ))}
           </div>
