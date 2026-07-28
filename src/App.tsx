@@ -38,6 +38,124 @@ type CaseStudy = {
   icon: 'ship' | 'vehicle' | 'incident' | 'document'
 }
 
+type CaseTab = 'overview' | 'timeline' | 'evidence' | 'resolution'
+
+const caseFileDetails: Record<string, {
+  timeline: string[]
+  evidence: string[]
+  lessons: string[]
+}> = {
+  'CASE-2026-001': {
+    timeline: [
+      'Incident history reviewed and current vessel state confirmed',
+      'On-site intervention initiated at Piraeus anchorage',
+      'Active processing unit and communication path validated',
+      'Incorrect recovery target isolated',
+      'Correct path restored and end-to-end service verified',
+      'Customer stakeholders informed and case closed',
+    ],
+    evidence: [
+      'Linux service and connectivity checks',
+      'Router and direct VSAT path validation',
+      'Processing unit state comparison',
+      'Network reachability and endpoint verification',
+      'Onboard functional validation',
+    ],
+    lessons: [
+      'Validate the active target before repeating historical recovery steps',
+      'Field intervention can remove uncertainty faster than prolonged remote assumptions',
+      'Operational ownership must continue through final customer confirmation',
+    ],
+  },
+  'CASE-2026-002': {
+    timeline: [
+      'Historical support activity reconstructed',
+      'Current environment compared against expected deployment state',
+      'System and network dependencies validated',
+      'Blocking condition isolated',
+      'Configuration aligned and services restarted',
+      'Operational recovery confirmed',
+    ],
+    evidence: [
+      'Linux system state',
+      'Service availability',
+      'Network reachability',
+      'Deployment configuration comparison',
+      'Customer IT validation',
+    ],
+    lessons: [
+      'Long-running cases require a clean reconstruction of assumptions',
+      'Configuration drift should be checked early',
+      'A complete recovery includes verification, documentation and stakeholder closure',
+    ],
+  },
+  'CASE-2026-003': {
+    timeline: [
+      'Previous six months of troubleshooting reviewed',
+      'Monitoring and database evidence correlated',
+      'Linux logs and service behaviour analysed',
+      'Implementation state checked in GitLab',
+      'Root cause hypothesis tested',
+      'Corrective action implemented and validated',
+    ],
+    evidence: [
+      'Grafana observations',
+      'PostgreSQL data',
+      'Linux logs',
+      'GitLab implementation history',
+      'Live environment validation',
+    ],
+    lessons: [
+      'Fragmented evidence becomes useful when correlated across systems',
+      'A fresh review can challenge inherited assumptions',
+      'Resolution speed improves when one owner connects the complete technical story',
+    ],
+  },
+  'CASE-2025-004': {
+    timeline: [
+      'Last valid telemetry reviewed',
+      'Movement history and device behaviour compared',
+      'Indirect signals and contextual evidence analysed',
+      'Likely search areas narrowed',
+      'Actionable findings shared',
+      'Both vehicles located',
+    ],
+    evidence: [
+      'Historical telemetry',
+      'Last known positions',
+      'Device communication behaviour',
+      'Movement patterns',
+      'Operational context',
+    ],
+    lessons: [
+      'Loss of live GPS does not eliminate all investigative value',
+      'Historical data can remain operationally decisive',
+      'Technical findings must be translated into clear actions for non-technical stakeholders',
+    ],
+  },
+  'CASE-2026-005': {
+    timeline: [
+      'Field procedures and hardware variations mapped',
+      'GRUB access workflow documented',
+      'ASUS and NUC differences captured',
+      'Teltonika bypass and direct VSAT procedure defined',
+      'Guides structured in Confluence',
+      'Operational use validated',
+    ],
+    evidence: [
+      'Hardware-specific steps',
+      'Linux GRUB procedure',
+      'Router bypass workflow',
+      'Direct VSAT connectivity checks',
+      'Confluence documentation structure',
+    ],
+    lessons: [
+      'Good documentation reduces dependence on individual memory',
+      'Field guides must be usable under time pressure',
+      'Hardware differences should be explicit, not implied',
+    ],
+  },
+}
 const caseStudies: CaseStudy[] = [
   {
     id: 'CASE-2026-001',
@@ -894,6 +1012,7 @@ function GlobalOperationsCenter() {
 function App() {
   const [booted, setBooted] = useState(false)
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null)
+  const [selectedCaseTab, setSelectedCaseTab] = useState<CaseTab>('overview')
   const [menuOpen, setMenuOpen] = useState(false)
 
   if (!booted) {
@@ -1063,7 +1182,7 @@ function App() {
           </div>
           <div className="incident-grid">
             {caseStudies.map((item) => (
-              <button className="incident-card" key={item.id} onClick={() => setSelectedCase(item)}>
+              <button className="incident-card" key={item.id} onClick={() => { setSelectedCase(item); setSelectedCaseTab('overview') }}>
                 <div className="incident-topline">
                   <span className="incident-icon"><CaseIcon type={item.icon} /></span>
                   <span className="incident-id">{item.id}</span>
@@ -1148,7 +1267,7 @@ function App() {
         <OperationsTerminal
           onOpenCase={(caseId) => {
             const match = caseStudies.find((item) => item.id === caseId)
-            if (match) setSelectedCase(match)
+            if (match) { setSelectedCase(match); setSelectedCaseTab('overview') }
           }}
         />
 
@@ -1181,25 +1300,127 @@ function App() {
         <span className="footer-status"><span className="status-dot" /> ONLINE</span>
       </footer>
 
-      {selectedCase && (
+            {selectedCase && (
         <div className="modal-backdrop" onClick={() => setSelectedCase(null)}>
-          <article className="case-modal" onClick={(event) => event.stopPropagation()}>
+          <article className="case-modal case-file-modal case-file-v9" onClick={(event) => event.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelectedCase(null)} aria-label="Close">
               <X />
             </button>
-            <div className="section-label">CASE FILE / {selectedCase.id}</div>
-            <div className="modal-icon"><CaseIcon type={selectedCase.icon} /></div>
-            <span className="modal-status"><CheckCircle2 size={16} /> {selectedCase.status}</span>
-            <h2>{selectedCase.title}</h2>
-            <p>{selectedCase.summary}</p>
-            <div className="modal-rule" />
-            <small>OPERATIONAL CONTEXT</small>
-            <p>
-              This summary intentionally excludes customer names, system identifiers and confidential
-              implementation details. A more detailed discussion can be provided during a professional
-              interview where appropriate.
-            </p>
-            <div className="tag-list">
+
+            <div className="case-file-header">
+              <div>
+                <div className="section-label">DECLASSIFIED OPERATIONAL DOSSIER</div>
+                <div className="case-file-id">{selectedCase.id}</div>
+              </div>
+              <div className="case-file-stamp">{selectedCase.status}</div>
+            </div>
+
+            <div className="case-file-meta">
+              <div><span>STATUS</span><strong>{selectedCase.status}</strong></div>
+              <div><span>PRIORITY</span><strong>{selectedCase.priority}</strong></div>
+              <div><span>CATEGORY</span><strong>{selectedCase.category}</strong></div>
+              <div><span>DURATION</span><strong>{selectedCase.duration}</strong></div>
+            </div>
+
+            <div className="case-file-title-block">
+              <div className="modal-icon"><CaseIcon type={selectedCase.icon} /></div>
+              <div>
+                <h2>{selectedCase.title}</h2>
+                <p className="case-lead">{selectedCase.summary}</p>
+              </div>
+            </div>
+
+            <div className="case-tabs" role="tablist" aria-label="Case file sections">
+              {([
+                ['overview', 'Overview'],
+                ['timeline', 'Timeline'],
+                ['evidence', 'Evidence'],
+                ['resolution', 'Resolution'],
+              ] as [CaseTab, string][]).map(([tab, label]) => (
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedCaseTab === tab}
+                  className={selectedCaseTab === tab ? 'active' : ''}
+                  key={tab}
+                  onClick={() => setSelectedCaseTab(tab)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div className="case-tab-panel">
+              {selectedCaseTab === 'overview' && (
+                <div className="case-report-grid compact-report-grid">
+                  <section>
+                    <small>01 / SITUATION</small>
+                    <p>{selectedCase.situation}</p>
+                  </section>
+                  <section>
+                    <small>02 / CHALLENGE</small>
+                    <p>{selectedCase.challenge}</p>
+                  </section>
+                  <section className="case-investigation">
+                    <small>03 / INVESTIGATION</small>
+                    <ul>
+                      {selectedCase.investigation.map((step) => <li key={step}>{step}</li>)}
+                    </ul>
+                  </section>
+                </div>
+              )}
+
+              {selectedCaseTab === 'timeline' && (
+                <div className="case-timeline-v9">
+                  {(caseFileDetails[selectedCase.id]?.timeline ?? []).map((step, index) => (
+                    <div className="case-timeline-step" key={step}>
+                      <div className="timeline-marker">{String(index + 1).padStart(2, '0')}</div>
+                      <div>
+                        <small>OPERATIONAL STEP</small>
+                        <p>{step}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {selectedCaseTab === 'evidence' && (
+                <div className="case-evidence-grid">
+                  {(caseFileDetails[selectedCase.id]?.evidence ?? []).map((item, index) => (
+                    <article key={item}>
+                      <span>EVIDENCE {String(index + 1).padStart(2, '0')}</span>
+                      <strong>{item}</strong>
+                    </article>
+                  ))}
+                </div>
+              )}
+
+              {selectedCaseTab === 'resolution' && (
+                <div className="case-resolution-v9">
+                  <section>
+                    <small>RESOLUTION</small>
+                    <p>{selectedCase.resolution}</p>
+                  </section>
+                  <section className="case-outcome">
+                    <small>OUTCOME</small>
+                    <p>{selectedCase.outcome}</p>
+                  </section>
+                  <section>
+                    <small>LESSONS LEARNED</small>
+                    <ul>
+                      {(caseFileDetails[selectedCase.id]?.lessons ?? []).map((lesson) => <li key={lesson}>{lesson}</li>)}
+                    </ul>
+                  </section>
+                </div>
+              )}
+            </div>
+
+            <div className="confidentiality-note">
+              <ShieldCheck size={18} />
+              Customer names, vessel names, system identifiers and confidential implementation details have been removed.
+            </div>
+
+            <div className="tag-list case-file-tags">
               {selectedCase.tags.map((tag) => <span key={tag}>{tag}</span>)}
             </div>
           </article>
