@@ -191,25 +191,60 @@ const stack = [
 
 const experience = [
   {
-    period: '2026 - PRESENT',
-    company: 'Maritime AI Technology Company',
+    period: 'MAR 2026 - PRESENT',
+    company: 'Orca AI',
     role: 'Customer Support Specialist / Technical Solutions & Operations Scope',
     detail:
-      'Owns mission-critical maritime incidents across a portfolio of 150+ vessels. Daily work includes Linux and SSH troubleshooting, PostgreSQL and SQL investigation, Grafana monitoring, GitLab collaboration, AWS and Docker environments, implementations, field visits, customer coordination and production service restoration.',
+      'Owns mission-critical maritime incidents across a portfolio of 150+ vessels. Daily work includes Linux and SSH troubleshooting, PostgreSQL and SQL investigation, Grafana monitoring, GitLab collaboration, AWS and Docker environments, implementations, field visits, customer coordination and production service restoration. Notable outcomes include restoring vessels after outages lasting 240+ days and more than one year.',
   },
   {
-    period: '2021 - 2026',
+    period: 'APR 2021 - MAR 2026',
     company: 'PowerFleet / Fleet Complete',
     role: 'Technical Support Engineer L2 / Data Analyst - EMEA',
     detail:
-      'Delivered L2/L3 telematics support across Greece, DACH, Benelux and Baltic markets. Investigated CANBus, GNSS, firmware, hardware, integrations and historical telemetry; created technical playbooks and internal tools; and supported recovery of two stolen vehicles despite the loss of live GPS transmissions.',
+      'Delivered L2/L3 telematics support across Greece, DACH, Benelux and Baltic markets. Investigated CANBus, GNSS, firmware, hardware, BLE sensors, integrations and historical telemetry; created technical playbooks and internal tools; and helped locate two stolen vehicles despite the loss of live GPS transmissions.',
   },
   {
-    period: '2001 - 2021',
-    company: 'Technical, Customer and Digital Operations',
-    role: 'IT Support, Project Delivery, Microsoft Support and Digital Operations',
+    period: 'SEP 2019 - MAR 2021',
+    company: 'IBI Parts',
+    role: 'Project Manager',
     detail:
-      'Built a broad operational foundation across IT support, infrastructure, Microsoft technologies, project delivery, customer service, e-commerce and international business environments. This background developed the customer communication, ownership and practical troubleshooting approach used in current technical solutions work.',
+      'Coordinated projects, customer requirements, suppliers and operational delivery while supporting commercial, technical and administrative workflows.',
+  },
+  {
+    period: 'SEP 2018 - SEP 2019',
+    company: 'Webhelp',
+    role: 'Amazon Customer Support Representative',
+    detail:
+      'Handled high-volume customer cases in an international environment, resolving complex order, account and service issues while maintaining quality and customer satisfaction targets.',
+  },
+  {
+    period: 'SEP 2016 - SEP 2018',
+    company: 'Teleperformance',
+    role: 'Microsoft Technical Support Agent',
+    detail:
+      'Provided technical support for Microsoft products and services, translated technical findings into clear customer actions and escalated complex issues through structured support processes.',
+  },
+  {
+    period: 'NOV 2014 - MAR 2016',
+    company: 'Stelpet',
+    role: 'E-Shop & Digital Marketing Manager',
+    detail:
+      'Managed e-commerce operations, digital marketing, product content and customer workflows. Increased daily online orders by approximately 450% within six months.',
+  },
+  {
+    period: 'MAR 2010 - OCT 2013',
+    company: 'Istos Business Interface Ltd.',
+    role: 'IT & Networks Manager',
+    detail:
+      'Supported business IT, networks, systems, users and technical operations while coordinating external providers and maintaining day-to-day service continuity.',
+  },
+  {
+    period: 'MAY 2009 - FEB 2010',
+    company: 'Hellenic Army',
+    role: 'Communications Center Specialist',
+    detail:
+      'Supported communications-center operations, controlled access to information flows and worked in a structured environment where accuracy, availability and responsibility were critical.',
   },
 ]
 
@@ -511,7 +546,7 @@ function OperationsTerminal({
     <section className="content-section terminal-section" id="terminal">
       <div className="section-heading">
         <div>
-          <div className="section-label">05 / OPERATIONS TERMINAL</div>
+          <div className="section-label">06 / OPERATIONS TERMINAL</div>
           <h2>Explore the full professional profile.</h2>
         </div>
         <p>Compact command output with career, education, technical skills and case files.</p>
@@ -558,6 +593,127 @@ function OperationsTerminal({
     </section>
   )
 }
+function GlobalOperationsCenter() {
+  const nodes = [
+    { id: 'athens', label: 'Athens', x: 52, y: 55, status: 'PRIMARY' },
+    { id: 'rotterdam', label: 'Rotterdam', x: 46, y: 34, status: 'EMEA' },
+    { id: 'hamburg', label: 'Hamburg', x: 50, y: 30, status: 'EMEA' },
+    { id: 'oslo', label: 'Oslo', x: 49, y: 22, status: 'NORDIC' },
+    { id: 'dubai', label: 'Dubai', x: 62, y: 55, status: 'MIDDLE EAST' },
+    { id: 'singapore', label: 'Singapore', x: 78, y: 68, status: 'APAC' },
+    { id: 'newyork', label: 'New York', x: 25, y: 38, status: 'NORTH AMERICA' },
+  ]
+
+  const routes = [
+    { from: [52, 55], to: [46, 34], delay: '0s' },
+    { from: [52, 55], to: [62, 55], delay: '0.8s' },
+    { from: [52, 55], to: [78, 68], delay: '1.6s' },
+    { from: [46, 34], to: [25, 38], delay: '2.4s' },
+    { from: [50, 30], to: [49, 22], delay: '3.2s' },
+  ]
+
+  return (
+    <section className="content-section operations-center-section" id="operations">
+      <div className="section-heading">
+        <div>
+          <div className="section-label">05 / GLOBAL OPERATIONS CENTER</div>
+          <h2>International technical operations.</h2>
+        </div>
+        <p>An anonymised visualisation of the regions, routes and operational environments supported throughout an international career.</p>
+      </div>
+
+      <div className="operations-center-grid">
+        <div className="world-operations-map">
+          <div className="map-topbar">
+            <span>AK GLOBAL OPERATIONS</span>
+            <strong>NETWORK ONLINE</strong>
+          </div>
+
+          <svg className="operations-map-svg" viewBox="0 0 100 70" role="img" aria-label="Abstract global operations map">
+            <path className="landmass landmass-americas" d="M8 18 L18 10 L28 14 L31 25 L25 34 L28 45 L21 58 L15 50 L13 37 L7 30 Z" />
+            <path className="landmass landmass-europe" d="M39 15 L49 10 L58 15 L57 27 L49 31 L42 26 Z" />
+            <path className="landmass landmass-africa" d="M43 31 L57 31 L61 42 L55 58 L46 56 L40 44 Z" />
+            <path className="landmass landmass-asia" d="M57 16 L72 10 L92 18 L94 33 L84 41 L69 35 L58 27 Z" />
+            <path className="landmass landmass-australia" d="M78 50 L91 49 L96 58 L88 65 L78 61 Z" />
+
+            {routes.map((route, index) => (
+              <g key={index}>
+                <line
+                  className="operations-route"
+                  x1={route.from[0]}
+                  y1={route.from[1]}
+                  x2={route.to[0]}
+                  y2={route.to[1]}
+                />
+                <circle className="route-packet" r="0.9" style={{ animationDelay: route.delay }}>
+                  <animateMotion
+                    dur="4.8s"
+                    repeatCount="indefinite"
+                    path={`M ${route.from[0]} ${route.from[1]} L ${route.to[0]} ${route.to[1]}`}
+                  />
+                </circle>
+              </g>
+            ))}
+
+            {nodes.map((node) => (
+              <g className="operations-node" key={node.id} transform={`translate(${node.x} ${node.y})`}>
+                <circle className="node-pulse" r="3.1" />
+                <circle className="node-core" r="1.1" />
+                <text x="3.2" y="-1.2">{node.label}</text>
+                <text className="node-status" x="3.2" y="1.8">{node.status}</text>
+              </g>
+            ))}
+          </svg>
+
+          <div className="map-legend">
+            <span><i className="legend-primary" /> Primary operations</span>
+            <span><i className="legend-route" /> Technical route</span>
+            <span><i className="legend-node" /> Regional node</span>
+          </div>
+        </div>
+
+        <aside className="operations-feed">
+          <div className="feed-header">
+            <div>
+              <span>ANONYMISED INCIDENT FEED</span>
+              <strong>OPERATIONAL SCENARIOS</strong>
+            </div>
+            <Activity size={22} />
+          </div>
+
+          <div className="feed-item">
+            <span className="feed-state recovered">RECOVERED</span>
+            <strong>Fleet Unit #147</strong>
+            <small>EMEA / Communications / Long-term outage</small>
+          </div>
+
+          <div className="feed-item">
+            <span className="feed-state resolved">RESOLVED</span>
+            <strong>Fleet Unit #082</strong>
+            <small>Baltic Region / GNSS / Positioning</small>
+          </div>
+
+          <div className="feed-item">
+            <span className="feed-state operational">OPERATIONAL</span>
+            <strong>Fleet Unit #214</strong>
+            <small>Mediterranean / Telemetry / Service restored</small>
+          </div>
+
+          <div className="feed-item">
+            <span className="feed-state monitoring">MONITORING</span>
+            <strong>Fleet Unit #055</strong>
+            <small>North Atlantic / Connectivity / Stable</small>
+          </div>
+
+          <div className="feed-disclaimer">
+            <ShieldCheck size={17} />
+            All scenarios are anonymised demonstrations based on real operational experience. No customer-identifiable information is displayed.
+          </div>
+        </aside>
+      </div>
+    </section>
+  )
+}
 function App() {
   const [booted, setBooted] = useState(false)
   const [selectedCase, setSelectedCase] = useState<CaseStudy | null>(null)
@@ -588,6 +744,7 @@ function App() {
           <a href="#incidents" onClick={() => setMenuOpen(false)}>Case Studies</a>
           <a href="#stack" onClick={() => setMenuOpen(false)}>Stack</a>
           <a href="#experience" onClick={() => setMenuOpen(false)}>Experience</a>
+          <a href="#operations" onClick={() => setMenuOpen(false)}>Operations</a>
           <a href="#terminal" onClick={() => setMenuOpen(false)}>Terminal</a>
           <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
         </nav>
@@ -809,6 +966,9 @@ function App() {
             <Award size={38} className="knowledge-award" />
           </div>
         </section>
+        <GlobalOperationsCenter />
+
+
         <OperationsTerminal
           onOpenCase={(caseId) => {
             const match = caseStudies.find((item) => item.id === caseId)
@@ -819,7 +979,7 @@ function App() {
 
         <section className="contact-section" id="contact">
           <div>
-            <div className="section-label">06 / SECURE CONTACT</div>
+            <div className="section-label">07 / SECURE CONTACT</div>
             <h2>Have a complex technical challenge?</h2>
             <p>
               Connect through LinkedIn. No personal phone number, home address or direct email is published
