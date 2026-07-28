@@ -377,6 +377,8 @@ function OperationsTerminal({
           'case 005    open case file 005',
           'contact     secure contact information',
           'linkedin    open LinkedIn',
+          'operations  show operations center summary',
+          'incident    show an anonymised production incident',
           'status      portfolio status',
           'clear       clear terminal',
         ].join('\n'),
@@ -537,6 +539,35 @@ function OperationsTerminal({
       window.open('https://www.linkedin.com/in/anastasios-kalokerinos/', '_blank', 'noopener,noreferrer')
       return
     }
+    if (command === 'operations') {
+      appendOutput(
+        [
+          'GLOBAL OPERATIONS CENTER',
+          'Status: Systems operational',
+          'Regions: Europe / Middle East / APAC / North America',
+          'Core areas: Networking / Linux / Data / Monitoring / IoT / Maritime',
+          'Delivery: Incident response / Implementations / Field support / Customer coordination',
+          'Privacy: All displayed scenarios are anonymised',
+          'Use the Operations navigation item to open the interactive map.',
+        ].join('\n'),
+      )
+      return
+    }
+
+    if (command === 'incident') {
+      appendOutput(
+        [
+          'EXAMPLE PRODUCTION INCIDENT',
+          'Symptoms: Production connectivity unavailable',
+          'Investigation: SSH verification / Database validation / Network diagnostics / Log analysis',
+          'Root cause: Configuration mismatch',
+          'Outcome: Production service restored',
+          'Status: Resolved',
+        ].join('\n'),
+      )
+      return
+    }
+
 
     if (command === 'status') {
       appendOutput(
@@ -610,121 +641,250 @@ function OperationsTerminal({
     </section>
   )
 }
+function RotatingStatus() {
+  const messages = [
+    'SYSTEMS OPERATIONAL',
+    'OPERATIONS ACTIVE',
+    'GLOBAL SUPPORT',
+    'INCIDENT RESPONSE',
+    'NETWORK READY',
+    'PRODUCTION READY',
+  ]
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setIndex((current) => (current + 1) % messages.length)
+    }, 16000)
+
+    return () => window.clearInterval(timer)
+  }, [])
+
+  return <span className="rotating-status-text" key={messages[index]}>{messages[index]}</span>
+}
+
 function GlobalOperationsCenter() {
   const nodes = [
-    { id: 'athens', label: 'Athens', x: 52, y: 55, status: 'PRIMARY' },
-    { id: 'rotterdam', label: 'Rotterdam', x: 46, y: 34, status: 'EMEA' },
-    { id: 'hamburg', label: 'Hamburg', x: 50, y: 30, status: 'EMEA' },
-    { id: 'oslo', label: 'Oslo', x: 49, y: 22, status: 'NORDIC' },
-    { id: 'dubai', label: 'Dubai', x: 62, y: 55, status: 'MIDDLE EAST' },
-    { id: 'singapore', label: 'Singapore', x: 78, y: 68, status: 'APAC' },
-    { id: 'newyork', label: 'New York', x: 25, y: 38, status: 'NORTH AMERICA' },
+    {
+      id: 'athens',
+      label: 'Athens',
+      x: 52,
+      y: 55,
+      region: 'Southern Europe',
+      focus: 'Primary operations hub',
+      details: ['Customer coordination', 'Incident ownership', 'Field interventions', 'Greek / English / German'],
+    },
+    {
+      id: 'rotterdam',
+      label: 'Rotterdam',
+      x: 46,
+      y: 34,
+      region: 'Western Europe',
+      focus: 'Fleet and enterprise operations',
+      details: ['Remote diagnostics', 'Implementations', 'Networking', 'Customer IT coordination'],
+    },
+    {
+      id: 'hamburg',
+      label: 'Hamburg',
+      x: 50,
+      y: 30,
+      region: 'DACH',
+      focus: 'German-speaking technical support',
+      details: ['L2/L3 escalations', 'Telematics', 'Customer operations', 'Technical documentation'],
+    },
+    {
+      id: 'oslo',
+      label: 'Oslo',
+      x: 49,
+      y: 22,
+      region: 'Nordic',
+      focus: 'International operational support',
+      details: ['Enterprise SaaS', 'Service recovery', 'Cross-team coordination', 'Production support'],
+    },
+    {
+      id: 'dubai',
+      label: 'Dubai',
+      x: 62,
+      y: 55,
+      region: 'Middle East',
+      focus: 'Regional customer operations',
+      details: ['Remote troubleshooting', 'Deployments', 'Connectivity', 'Stakeholder communication'],
+    },
+    {
+      id: 'singapore',
+      label: 'Singapore',
+      x: 78,
+      y: 68,
+      region: 'APAC',
+      focus: 'Global fleet coverage',
+      details: ['Maritime operations', 'Linux systems', 'VSAT connectivity', 'Operational handover'],
+    },
+    {
+      id: 'newyork',
+      label: 'New York',
+      x: 25,
+      y: 38,
+      region: 'North America',
+      focus: 'International SaaS support',
+      details: ['Incident response', 'Platform support', 'Data investigation', 'Customer communication'],
+    },
   ]
 
-  const routes = [
-    { from: [52, 55], to: [46, 34], delay: '0s' },
-    { from: [52, 55], to: [62, 55], delay: '0.8s' },
-    { from: [52, 55], to: [78, 68], delay: '1.6s' },
-    { from: [46, 34], to: [25, 38], delay: '2.4s' },
-    { from: [50, 30], to: [49, 22], delay: '3.2s' },
+  const feed = [
+    {
+      state: 'RECOVERED',
+      tone: 'recovered',
+      title: 'Fleet Unit #147',
+      detail: 'EMEA / Communications / Long-term outage',
+    },
+    {
+      state: 'RESOLVED',
+      tone: 'resolved',
+      title: 'Fleet Unit #082',
+      detail: 'Baltic Region / GNSS / Positioning',
+    },
+    {
+      state: 'OPERATIONAL',
+      tone: 'operational',
+      title: 'Fleet Unit #214',
+      detail: 'Mediterranean / Telemetry / Service restored',
+    },
+    {
+      state: 'MONITORING',
+      tone: 'monitoring',
+      title: 'Fleet Unit #055',
+      detail: 'North Atlantic / Connectivity / Stable',
+    },
   ]
+
+  const [selectedNode, setSelectedNode] = useState(nodes[0])
+  const [feedIndex, setFeedIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setFeedIndex((current) => (current + 1) % feed.length)
+    }, 9000)
+
+    return () => window.clearInterval(timer)
+  }, [feed.length])
+
+  const selectedFeed = feed[feedIndex]
 
   return (
     <section className="content-section operations-center-section" id="operations">
       <div className="section-heading">
         <div>
           <div className="section-label">05 / GLOBAL OPERATIONS CENTER</div>
-          <h2>International technical operations.</h2>
+          <h2>Interactive international operations.</h2>
         </div>
-        <p>An anonymised visualisation of the regions, routes and operational environments supported throughout an international career.</p>
+        <p>Select a regional node to inspect the type of technical and customer-facing work supported across international environments.</p>
       </div>
 
-      <div className="operations-center-grid">
-        <div className="world-operations-map">
+      <div className="operations-v8-layout">
+        <div className="operations-v8-map">
           <div className="map-topbar">
-            <span>AK GLOBAL OPERATIONS</span>
-            <strong>NETWORK ONLINE</strong>
+            <div>
+              <span>AK GLOBAL OPERATIONS</span>
+              <strong>SELECT A REGIONAL NODE</strong>
+            </div>
+            <small>ACTIVE ROUTE: {selectedNode.label.toUpperCase()}</small>
           </div>
 
-          <svg className="operations-map-svg" viewBox="0 0 100 70" role="img" aria-label="Abstract global operations map">
-            <path className="landmass landmass-americas" d="M8 18 L18 10 L28 14 L31 25 L25 34 L28 45 L21 58 L15 50 L13 37 L7 30 Z" />
-            <path className="landmass landmass-europe" d="M39 15 L49 10 L58 15 L57 27 L49 31 L42 26 Z" />
-            <path className="landmass landmass-africa" d="M43 31 L57 31 L61 42 L55 58 L46 56 L40 44 Z" />
-            <path className="landmass landmass-asia" d="M57 16 L72 10 L92 18 L94 33 L84 41 L69 35 L58 27 Z" />
-            <path className="landmass landmass-australia" d="M78 50 L91 49 L96 58 L88 65 L78 61 Z" />
+          <div className="interactive-map-stage">
+            <svg className="operations-map-svg operations-map-svg-v8" viewBox="0 0 100 70" role="img" aria-label="Abstract global operations map">
+              <path className="landmass landmass-americas" d="M8 18 L18 10 L28 14 L31 25 L25 34 L28 45 L21 58 L15 50 L13 37 L7 30 Z" />
+              <path className="landmass landmass-europe" d="M39 15 L49 10 L58 15 L57 27 L49 31 L42 26 Z" />
+              <path className="landmass landmass-africa" d="M43 31 L57 31 L61 42 L55 58 L46 56 L40 44 Z" />
+              <path className="landmass landmass-asia" d="M57 16 L72 10 L92 18 L94 33 L84 41 L69 35 L58 27 Z" />
+              <path className="landmass landmass-australia" d="M78 50 L91 49 L96 58 L88 65 L78 61 Z" />
 
-            {routes.map((route, index) => (
-              <g key={index}>
-                <line
-                  className="operations-route"
-                  x1={route.from[0]}
-                  y1={route.from[1]}
-                  x2={route.to[0]}
-                  y2={route.to[1]}
+              <line
+                className="selected-route-line"
+                x1="52"
+                y1="55"
+                x2={selectedNode.x}
+                y2={selectedNode.y}
+              />
+
+              <circle className="selected-route-packet" r="0.9">
+                <animateMotion
+                  dur="3.2s"
+                  repeatCount="indefinite"
+                  path={`M 52 55 L ${selectedNode.x} ${selectedNode.y}`}
                 />
-                <circle className="route-packet" r="0.9" style={{ animationDelay: route.delay }}>
-                  <animateMotion
-                    dur="4.8s"
-                    repeatCount="indefinite"
-                    path={`M ${route.from[0]} ${route.from[1]} L ${route.to[0]} ${route.to[1]}`}
-                  />
-                </circle>
-              </g>
-            ))}
+              </circle>
+            </svg>
 
             {nodes.map((node) => (
-              <g className="operations-node" key={node.id} transform={`translate(${node.x} ${node.y})`}>
-                <circle className="node-pulse" r="3.1" />
-                <circle className="node-core" r="1.1" />
-                <text x="3.2" y="-1.2">{node.label}</text>
-                <text className="node-status" x="3.2" y="1.8">{node.status}</text>
-              </g>
+              <button
+                className={`map-node-button ${selectedNode.id === node.id ? 'is-selected' : ''}`}
+                key={node.id}
+                style={{ left: `${node.x}%`, top: `${(node.y / 70) * 100}%` }}
+                onClick={() => setSelectedNode(node)}
+                type="button"
+                aria-label={`Open ${node.label} operations node`}
+              >
+                <span className="map-node-dot" />
+                <strong>{node.label}</strong>
+              </button>
             ))}
-          </svg>
+          </div>
 
-          <div className="map-legend">
-            <span><i className="legend-primary" /> Primary operations</span>
-            <span><i className="legend-route" /> Technical route</span>
-            <span><i className="legend-node" /> Regional node</span>
+          <div className="selected-node-panel">
+            <div className="selected-node-heading">
+              <div>
+                <span>SELECTED NODE</span>
+                <h3>{selectedNode.label}</h3>
+              </div>
+              <strong>{selectedNode.region}</strong>
+            </div>
+
+            <p>{selectedNode.focus}</p>
+
+            <div className="selected-node-tags">
+              {selectedNode.details.map((detail) => <span key={detail}>{detail}</span>)}
+            </div>
           </div>
         </div>
 
-        <aside className="operations-feed">
-          <div className="feed-header">
-            <div>
-              <span>ANONYMISED INCIDENT FEED</span>
-              <strong>OPERATIONAL SCENARIOS</strong>
+        <aside className="operations-v8-side">
+          <div className="operations-feed-v8">
+            <div className="feed-header">
+              <div>
+                <span>ANONYMISED INCIDENT FEED</span>
+                <strong>ROTATING OPERATIONAL SCENARIOS</strong>
+              </div>
+              <Activity size={22} />
             </div>
-            <Activity size={22} />
+
+            <div className="featured-feed-item" key={`${selectedFeed.title}-${feedIndex}`}>
+              <span className={`feed-state ${selectedFeed.tone}`}>{selectedFeed.state}</span>
+              <strong>{selectedFeed.title}</strong>
+              <small>{selectedFeed.detail}</small>
+              <div className="feed-progress"><span /></div>
+            </div>
+
+            <div className="feed-queue">
+              {feed.map((item, index) => (
+                <button
+                  type="button"
+                  key={item.title}
+                  className={index === feedIndex ? 'active' : ''}
+                  onClick={() => setFeedIndex(index)}
+                >
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <div>
+                    <strong>{item.state}</strong>
+                    <small>{item.detail}</small>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="feed-item">
-            <span className="feed-state recovered">RECOVERED</span>
-            <strong>Fleet Unit #147</strong>
-            <small>EMEA / Communications / Long-term outage</small>
-          </div>
-
-          <div className="feed-item">
-            <span className="feed-state resolved">RESOLVED</span>
-            <strong>Fleet Unit #082</strong>
-            <small>Baltic Region / GNSS / Positioning</small>
-          </div>
-
-          <div className="feed-item">
-            <span className="feed-state operational">OPERATIONAL</span>
-            <strong>Fleet Unit #214</strong>
-            <small>Mediterranean / Telemetry / Service restored</small>
-          </div>
-
-          <div className="feed-item">
-            <span className="feed-state monitoring">MONITORING</span>
-            <strong>Fleet Unit #055</strong>
-            <small>North Atlantic / Connectivity / Stable</small>
-          </div>
-
-          <div className="feed-disclaimer">
-            <ShieldCheck size={17} />
-            All scenarios are anonymised demonstrations based on real operational experience. No customer-identifiable information is displayed.
+          <div className="operations-privacy-note">
+            <ShieldCheck size={18} />
+            <p>All nodes and incident scenarios are anonymised portfolio demonstrations. No customer names, vessel names, coordinates, system identifiers or confidential implementation details are displayed.</p>
           </div>
         </aside>
       </div>
@@ -767,9 +927,7 @@ function App() {
         </nav>
 
         <div className="system-status">
-          <span className="status-dot" />
-          SYSTEMS OPERATIONAL
-        </div>
+          <span className="status-dot" /><RotatingStatus /></div>
       </header>
 
       <main id="top">
